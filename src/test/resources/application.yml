@@ -1,0 +1,10 @@
+mongo:
+  host: 127.0.0.1
+  port: 27017
+  database: copyshare
+  username: test
+  password: test
+spring:
+  oauth2:
+    resource:
+      userInfoUri: http://localhost:9999/sso/user
