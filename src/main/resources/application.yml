@@ -1,6 +1,6 @@
 mongo:
   host: localhost
   port: 27017
-  database: copyshare
+  database: contentapi
   username: dev
   password: dev
