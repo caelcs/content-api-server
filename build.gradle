@@ -76,6 +76,7 @@ dependencies {
     compile("joda-time:joda-time:${jodaTimeVersion}")
     compile("uk.co.caeldev:spring-security-mongo:${springSecurityMongoVersion}")
     compile("uk.co.caeldev:spring-mvc-utils:${springMvcUtilsVersion}")
+    compile("org.apache.commons:commons-lang3:${apacheCommonsLang3Version}")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
