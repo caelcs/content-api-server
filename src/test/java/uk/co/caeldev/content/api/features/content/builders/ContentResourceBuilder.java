@@ -13,7 +13,7 @@ import static uk.org.fyodor.jodatime.generators.RDG.localDate;
 public class ContentResourceBuilder {
 
     private String content = string().next();
-    private UUID contentUUID = UUID.randomUUID();
+    private String contentUUID = UUID.randomUUID().toString();
     private ContentStatus contentStatus = value(ContentStatus.class).next();
     private DateTime creationDate = localDate().next().toDateTimeAtCurrentTime();
 
@@ -29,7 +29,7 @@ public class ContentResourceBuilder {
         return this;
     }
 
-    public ContentResourceBuilder contentUUID(final UUID contentUUID) {
+    public ContentResourceBuilder contentUUID(final String contentUUID) {
         this.contentUUID = contentUUID;
         return this;
     }

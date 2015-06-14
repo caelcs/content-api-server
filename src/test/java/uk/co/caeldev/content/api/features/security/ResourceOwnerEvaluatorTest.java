@@ -37,7 +37,7 @@ public class ResourceOwnerEvaluatorTest {
 
         //And
         final Publisher expectedPublisher = PublisherBuilder.publisherBuilder().build();
-        given(publisherService.getPublisherByUUIDAndUsername(publisherUUID, authentication.getName())).willReturn(expectedPublisher);
+        given(publisherService.getPublisherByUUIDAndUsername(publisherUUID.toString(), authentication.getName())).willReturn(expectedPublisher);
 
         //When
         final boolean result = resourceOwnerEvaluator.hasPermission(authentication, publisherUUID, Permissions.PUBLISHER_OWN_CONTENT.toString());
@@ -53,7 +53,7 @@ public class ResourceOwnerEvaluatorTest {
         final UUID publisherUUID = UUID.randomUUID();
 
         //And
-        given(publisherService.getPublisherByUUIDAndUsername(publisherUUID, authentication.getName())).willReturn(null);
+        given(publisherService.getPublisherByUUIDAndUsername(publisherUUID.toString(), authentication.getName())).willReturn(null);
 
         //When
         final boolean result = resourceOwnerEvaluator.hasPermission(authentication, publisherUUID, Permissions.PUBLISHER_OWN_CONTENT.toString());
@@ -70,7 +70,7 @@ public class ResourceOwnerEvaluatorTest {
 
         //And
         final Publisher expectedPublisher = PublisherBuilder.publisherBuilder().build();
-        given(publisherService.getPublisherByUUIDAndUsername(publisherUUID, authentication.getName())).willReturn(expectedPublisher);
+        given(publisherService.getPublisherByUUIDAndUsername(publisherUUID.toString(), authentication.getName())).willReturn(expectedPublisher);
 
         //When
         final boolean result = resourceOwnerEvaluator.hasPermission(authentication, publisherUUID, string().next());

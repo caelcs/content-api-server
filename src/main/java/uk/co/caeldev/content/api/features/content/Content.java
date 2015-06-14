@@ -7,26 +7,16 @@ import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.UUID;
-
 @Document
 public class Content {
 
     @Id
     private String id;
-    private UUID contentUUID;
-    private String username;
+    private String contentUUID;
+    private String publisherId;
     private String content;
     private ContentStatus status;
     private DateTime creationDate;
-
-    public void setContentUUID(UUID contentUUID) {
-        this.contentUUID = contentUUID;
-    }
-
-    public UUID getContentUUID() {
-        return contentUUID;
-    }
 
     public void setContent(String content) {
         this.content = content;
@@ -60,12 +50,20 @@ public class Content {
         this.creationDate = creationDate;
     }
 
-    public String getUsername() {
-        return username;
+    public String getContentUUID() {
+        return contentUUID;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setContentUUID(String contentUUID) {
+        this.contentUUID = contentUUID;
+    }
+
+    public String getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(String publisherId) {
+        this.publisherId = publisherId;
     }
 
     @Override

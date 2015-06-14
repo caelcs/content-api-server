@@ -5,17 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;
 import org.springframework.hateoas.ResourceSupport;
 
-import java.util.UUID;
-
 public class ContentResource extends ResourceSupport {
 
-    private final UUID contentUUID;
+    private final String contentUUID;
     private final String content;
     private final ContentStatus contentStatus;
     private final DateTime creationDate;
 
     @JsonCreator
-    public ContentResource(@JsonProperty("contentUUID") final UUID contentUUID,
+    public ContentResource(@JsonProperty("contentUUID") final String contentUUID,
                            @JsonProperty("content") final String content,
                            @JsonProperty("contentStatus") final ContentStatus contentStatus,
                            @JsonProperty("creationDate") final DateTime creationDate) {
@@ -25,7 +23,7 @@ public class ContentResource extends ResourceSupport {
         this.creationDate = creationDate;
     }
 
-    public UUID getContentUUID() {
+    public String getContentUUID() {
         return contentUUID;
     }
 

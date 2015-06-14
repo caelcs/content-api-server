@@ -39,7 +39,7 @@ public class ContentResourceAssemblerTest {
     public void shouldConvertResourceContentToContent() throws Exception {
         // Given
         final String content = string().next();
-        final UUID contentUUID = UUID.randomUUID();
+        final String contentUUID = UUID.randomUUID().toString();
         final DateTime creationDate = DateTime.now();
         final ContentStatus contentStatus = ContentStatus.UNREAD;
         final ContentResource contentResource = ContentResourceBuilder.contentResourceBuilder().content(content).contentUUID(contentUUID).creationDate(creationDate).status(contentStatus).build();

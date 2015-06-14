@@ -2,15 +2,13 @@ package uk.co.caeldev.content.api.features.content;
 
 import org.joda.time.DateTime;
 
-import java.util.UUID;
-
 public final class ContentBuilder {
 
     private String content;
     private ContentStatus contentStatus;
-    private UUID contentUUID;
+    private String contentUUID;
     private DateTime creationDate;
-    private String username;
+    private String publisherId;
 
     private ContentBuilder() {
     }
@@ -29,7 +27,7 @@ public final class ContentBuilder {
         return this;
     }
 
-    public ContentBuilder contentUUID(final UUID contentUUID) {
+    public ContentBuilder contentUUID(final String contentUUID) {
         this.contentUUID = contentUUID;
         return this;
     }
@@ -39,8 +37,8 @@ public final class ContentBuilder {
         return this;
     }
 
-    public ContentBuilder username(String username) {
-        this.username = username;
+    public ContentBuilder publisherId(final String publisherId) {
+        this.publisherId = publisherId;
         return this;
     }
 
@@ -49,7 +47,7 @@ public final class ContentBuilder {
         contentNew.setContent(content);
         contentNew.setStatus(contentStatus);
         contentNew.setContentUUID(contentUUID);
-        contentNew.setUsername(username);
+        contentNew.setPublisherId(publisherId);
         contentNew.setCreationDate(creationDate);
         return contentNew;
     }

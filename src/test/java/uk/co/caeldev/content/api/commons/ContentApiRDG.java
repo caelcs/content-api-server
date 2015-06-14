@@ -21,7 +21,7 @@ public class ContentApiRDG extends RDG {
                 public Content next() {
                     return ContentBuilder.contentBuilder()
                             .content(string().next())
-                            .contentUUID(UUID.randomUUID())
+                            .contentUUID(UUID.randomUUID().toString())
                             .creationDate(localDate().next().toDateTimeAtCurrentTime())
                             .status(value(ContentStatus.class).next())
                             .build();
@@ -34,15 +34,6 @@ public class ContentApiRDG extends RDG {
             @Override
             public GrantedAuthority next() {
                 return new SimpleGrantedAuthority(string().next());
-            }
-        };
-    }
-
-    public static Generator<ObjectId> objectId() {
-        return new Generator<ObjectId>() {
-            @Override
-            public ObjectId next() {
-                return new ObjectId();
             }
         };
     }

@@ -3,25 +3,22 @@ package uk.co.caeldev.content.api.features.publisher;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.UUID;
 
 @Document
 public class Publisher {
 
     @Id
-    private ObjectId id;
+    private String id;
     private String username;
-    private UUID publisherUUID;
+    private String publisherUUID;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -33,11 +30,11 @@ public class Publisher {
         this.username = username;
     }
 
-    public UUID getPublisherUUID() {
+    public String getPublisherUUID() {
         return publisherUUID;
     }
 
-    public void setPublisherUUID(UUID publisherUUID) {
+    public void setPublisherUUID(String publisherUUID) {
         this.publisherUUID = publisherUUID;
     }
 

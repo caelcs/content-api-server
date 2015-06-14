@@ -32,7 +32,7 @@ public class ResourceOwnerEvaluator implements PermissionEvaluator {
 
         if (PUBLISHER_OWN_CONTENT.name().equals(permission.toString()) && targetDomainObject instanceof UUID) {
             final UUID publisherUUID = (UUID) targetDomainObject;
-            final Publisher publisher = publisherService.getPublisherByUUIDAndUsername(publisherUUID, authentication.getName());
+            final Publisher publisher = publisherService.getPublisherByUUIDAndUsername(publisherUUID.toString(), authentication.getName());
             return publisher != null;
         }
 

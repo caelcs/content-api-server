@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import uk.co.caeldev.content.api.features.publisher.Publisher;
+import uk.co.caeldev.content.api.features.publisher.PublisherService;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
-import uk.co.caeldev.springsecuritymongo.domain.User;
 
 import java.util.UUID;
 
@@ -23,20 +23,22 @@ public class ContentController {
     private final static Logger LOGGER = LoggerFactory.getLogger(ContentController.class);
 
     private final ContentService contentService;
+    private final PublisherService publisherService;
     private final ContentResourceAssembler contentResourceAssembler;
 
     @Autowired
     public ContentController(final ContentService contentService,
+                             final PublisherService publisherService,
                              final ContentResourceAssembler contentResourceAssembler) {
         this.contentService = contentService;
+        this.publisherService = publisherService;
         this.contentResourceAssembler = contentResourceAssembler;
     }
 
     @RequestMapping(value = "/publishers/{publisherUUID}/contents", method = RequestMethod.POST)
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
     public HttpEntity<ContentResource> publish(@PathVariable UUID publisherUUID,
-                                   @RequestBody String content,
-                                   @AuthenticationPrincipal final User user) {
+                                   @RequestBody String content) {
 
         LOGGER.info("Publishing content");
         if (content.isEmpty()) {
@@ -47,7 +49,9 @@ public class ContentController {
                     .build();
         }
 
-        final Content publishedContent = contentService.publish(content, user.getUsername());
+        final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID.toString());
+
+        final Content publishedContent = contentService.publish(content, publisher.getId());
 
         return ResponseEntityBuilder.
                 <ContentResource>responseEntityBuilder()
