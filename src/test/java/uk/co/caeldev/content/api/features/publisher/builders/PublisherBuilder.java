@@ -1,4 +1,4 @@
-package uk.co.caeldev.content.api.features.security.builders;
+package uk.co.caeldev.content.api.features.publisher.builders;
 
 import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.org.fyodor.generators.characters.CharacterSetFilter;

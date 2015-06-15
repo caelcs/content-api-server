@@ -8,7 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.PublisherService;
-import uk.co.caeldev.content.api.features.security.builders.PublisherBuilder;
+import uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder;
 
 import java.util.UUID;
 

@@ -17,7 +17,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static uk.co.caeldev.content.api.features.content.builders.ContentResourceBuilder.contentResourceBuilder;
-import static uk.co.caeldev.content.api.features.security.builders.PublisherBuilder.publisherBuilder;
+import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.org.fyodor.generators.RDG.string;
 
 @RunWith(MockitoJUnitRunner.class)
