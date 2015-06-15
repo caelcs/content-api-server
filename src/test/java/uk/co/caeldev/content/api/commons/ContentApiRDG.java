@@ -1,6 +1,5 @@
 package uk.co.caeldev.content.api.commons;
 
-import org.bson.types.ObjectId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import uk.co.caeldev.content.api.features.content.Content;

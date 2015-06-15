@@ -3,7 +3,6 @@ apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'spring-boot'
 apply plugin: 'pl.allegro.tech.build.axion-release'
-apply plugin: 'io.spring.dependency-management'
 
 buildscript {
     repositories {
@@ -14,7 +13,6 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("pl.allegro.tech.build:axion-release-plugin:${axionReleasePluginVersion}")
-        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
     }
 }
 
@@ -53,20 +51,14 @@ configurations {
     providedRuntime
 }
 
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-starter-parent:${springCloudOAuthParentVersion}")
-    }
-}
-
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-aop")
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
-    compile("org.springframework.cloud:spring-cloud-starter-security")
 
+    compile("org.springframework.cloud:spring-cloud-security:${springCloudSecurityVersion}")
     compile("org.springframework.hateoas:spring-hateoas")
     compile("com.google.guava:guava:${guavaVersion}")
     compile("org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauth2Version}")
@@ -75,7 +67,9 @@ dependencies {
 
     compile("joda-time:joda-time:${jodaTimeVersion}")
     compile("uk.co.caeldev:spring-security-mongo:${springSecurityMongoVersion}")
-    compile("uk.co.caeldev:spring-mvc-utils:${springMvcUtilsVersion}")
+    compile("uk.co.caeldev:spring-mvc-utils:${springMvcUtilsVersion}") {
+
+    }
     compile("org.apache.commons:commons-lang3:${apacheCommonsLang3Version}")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")

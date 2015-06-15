@@ -3,6 +3,7 @@ package uk.co.caeldev.content.api.features.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -19,10 +20,11 @@ public class ResourceOwnerEvaluator implements PermissionEvaluator {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ResourceOwnerEvaluator.class);
 
-    private PublisherService publisherService;
+    private final PublisherService publisherService;
 
     @Autowired
-    public ResourceOwnerEvaluator(PublisherService publisherService) {
+    @Lazy
+    public ResourceOwnerEvaluator(final PublisherService publisherService) {
         this.publisherService = publisherService;
     }
 

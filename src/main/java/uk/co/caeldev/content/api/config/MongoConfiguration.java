@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @EnableConfigurationProperties(MongoSettings.class)
-@EnableMongoRepositories(basePackages = {"uk.co.caeldev"})
 public class MongoConfiguration {
 
     @Bean

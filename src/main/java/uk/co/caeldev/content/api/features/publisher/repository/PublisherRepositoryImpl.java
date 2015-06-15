@@ -6,13 +6,16 @@ import uk.co.caeldev.content.api.features.publisher.Publisher;
 @Component
 public class PublisherRepositoryImpl implements PublisherRepositoryBase {
 
+    public PublisherRepositoryImpl() {
+    }
+
     @Override
     public Publisher findByUUIDAndUsername(String publisherUUID, String username) {
-        return null;
+        return new Publisher();
     }
 
     @Override
     public Publisher findByUUID(String publisherUUID) {
-        return null;
+        return new Publisher();
     }
 }
