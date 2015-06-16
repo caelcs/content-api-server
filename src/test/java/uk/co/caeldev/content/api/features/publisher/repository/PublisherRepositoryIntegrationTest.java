@@ -62,4 +62,34 @@ public class PublisherRepositoryIntegrationTest {
         assertThat(result.getPublisherUUID()).isEqualTo(publisherUUID);
         assertThat(result.getUsername()).isEqualTo("(8/F#@]L0K?<c<>Jx*I|`0TjP79zjU");
     }
+
+    @Test
+    @UsingDataSet(loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    public void shouldFindPublisherByUUIDAndUsername() throws Exception {
+        //Given
+        final String publisherUUID = "44d74b78-a235-45bf-9aa5-79b72e1531ad";
+        final String username = "(8/F#@]L0K?<c<>Jx*I|`0TjP79zjU";
+
+        //When
+        final Publisher result = publisherRepository.findByUUIDAndUsername(publisherUUID, username);
+
+        //Then
+        assertThat(result.getId()).isEqualTo("7749aa97-2e2f-4666-b396-475fd29c5da4");
+        assertThat(result.getPublisherUUID()).isEqualTo(publisherUUID);
+        assertThat(result.getUsername()).isEqualTo(username);
+    }
+
+    @Test
+    @UsingDataSet(loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    public void shouldNotFindPublisherWhenUUIDIsInvalid() throws Exception {
+        //Given
+        final String publisherUUID = "invalidUUID";
+        final String username = "(8/F#@]L0K?<c<>Jx*I|`0TjP79zjU";
+
+        //When
+        final Publisher result = publisherRepository.findByUUIDAndUsername(publisherUUID, username);
+
+        //Then
+        assertThat(result).isNull();
+    }
 }
