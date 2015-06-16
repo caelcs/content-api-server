@@ -1,4 +1,4 @@
-package uk.co.caeldev.content.api.features.publisher.repository.config;
+package uk.co.caeldev.content.api.features.config;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;

@@ -11,7 +11,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
-import uk.co.caeldev.content.api.features.publisher.repository.config.TestRepositoryConfiguration;
+import uk.co.caeldev.content.api.features.config.TestRepositoryConfiguration;
 
 import java.util.UUID;
 
