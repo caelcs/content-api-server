@@ -2,33 +2,18 @@ package uk.co.caeldev.content.api.features.publisher.repository;
 
 import com.lordofthejars.nosqlunit.annotation.UsingDataSet;
 import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
-import com.lordofthejars.nosqlunit.mongodb.MongoDbRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.co.caeldev.content.api.features.AbstractRepositoryIntegrationTest;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
-import uk.co.caeldev.content.api.features.config.TestRepositoryConfiguration;
 
 import java.util.UUID;
 
-import static com.lordofthejars.nosqlunit.mongodb.MongoDbRule.MongoDbRuleBuilder.newMongoDbRule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {TestRepositoryConfiguration.class})
-public class PublisherRepositoryIntegrationTest {
-
-    @Rule
-    public MongoDbRule mongoDbRule = newMongoDbRule().defaultSpringMongoDb("contentapi");
-
-    @Autowired
-    private ApplicationContext context;
+public class PublisherRepositoryIntegrationTest extends AbstractRepositoryIntegrationTest {
 
     @Autowired
     private PublisherRepository publisherRepository;
