@@ -2,5 +2,7 @@
 <configuration debug="true">
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="org.springframework" level="INFO"/>
+    <logger name="com.github.tomakehurst.wiremock" level="INFO"/>
     <logger name="uk.co.caeldev.content.api" level="DEBUG"/>
+
 </configuration>

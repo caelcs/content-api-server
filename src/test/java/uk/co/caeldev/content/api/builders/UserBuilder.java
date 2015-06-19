@@ -1,6 +1,7 @@
 package uk.co.caeldev.content.api.builders;
 
 import org.springframework.security.core.GrantedAuthority;
+import uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder;
 import uk.co.caeldev.springsecuritymongo.domain.User;
 
 import java.util.Set;
@@ -12,10 +13,10 @@ import static uk.org.fyodor.generators.RDG.string;
 
 public class UserBuilder {
 
-    private final String password = string().next();
-    private final String username = string().next();
-    private final UUID userUUID = UUID.randomUUID();
-    private final Set<GrantedAuthority> grantedAuthorities = set(ofGrantedAuthority()).next();
+    private String password = string().next();
+    private String username = string().next();
+    private UUID userUUID = UUID.randomUUID();
+    private Set<GrantedAuthority> grantedAuthorities = set(ofGrantedAuthority()).next();
 
     private UserBuilder() {
     }
@@ -24,9 +25,12 @@ public class UserBuilder {
         return new UserBuilder();
     }
 
+    public UserBuilder username(String username) {
+        this.username = username;
+        return this;
+    }
+
     public User build() {
         return new User(password, username, userUUID, grantedAuthorities, true, true, true, true);
     }
-
-
 }

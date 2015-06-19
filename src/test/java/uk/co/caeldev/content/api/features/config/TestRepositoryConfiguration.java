@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.test.context.ActiveProfiles;
 import uk.co.caeldev.content.api.config.*;
 import uk.co.caeldev.content.api.features.publisher.config.MongoClientTestConfiguration;
 
@@ -13,6 +14,7 @@ import uk.co.caeldev.content.api.features.publisher.config.MongoClientTestConfig
 @ComponentScan(basePackages = {"uk.co.caeldev.content.api.config"})
 @EnableMongoRepositories(basePackages = {"uk.co.caeldev.content.api.features.*.repository"})
 @Import({MongoClientTestConfiguration.class, MongoConfiguration.class, MongoSettings.class})
+@ActiveProfiles("test")
 public class TestRepositoryConfiguration {
 
 }

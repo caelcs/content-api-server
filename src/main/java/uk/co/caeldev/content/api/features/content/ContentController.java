@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
@@ -35,7 +36,7 @@ public class ContentController {
         this.contentResourceAssembler = contentResourceAssembler;
     }
 
-    @RequestMapping(value = "/publishers/{publisherUUID}/contents", method = RequestMethod.POST)
+    @RequestMapping(value = "/publishers/{publisherUUID}/contents", method = RequestMethod.POST, consumes = {MediaType.TEXT_PLAIN_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
     public HttpEntity<ContentResource> publish(@PathVariable UUID publisherUUID,
                                    @RequestBody String content) {

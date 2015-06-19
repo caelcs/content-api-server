@@ -82,6 +82,9 @@ dependencies {
     testCompile("com.github.fakemongo:fongo:${fongoVersion}")
     testCompile("com.lordofthejars:nosqlunit-mongodb:${nosqlunitMongodbVersion}")
     testCompile("com.jayway.jsonpath:json-path:${jsonPathVersion}")
+    testCompile("com.jayway.restassured:rest-assured:${restAssuredVersion}")
+    testCompile("org.scribe:scribe:${scribeVersion}")
+    testCompile("com.github.tomakehurst:wiremock:${wiremockVersion}")
 
 }
 

@@ -4,7 +4,12 @@ mongo:
   database: contentapi
   username: test
   password: test
+
 spring:
   oauth2:
     resource:
       userInfoUri: http://localhost:9999/sso/user
+
+server:
+  port: 9000
+  contextPath: /content-api-server

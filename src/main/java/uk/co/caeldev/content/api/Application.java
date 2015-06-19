@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 @Configuration
-@ComponentScan(basePackages = {"uk.co.caeldev.springsecuritymongo","uk.co.caeldev.spring.mvc", "uk.co.caeldev.content.api"})
+@ComponentScan(basePackages = {"uk.co.caeldev.spring.mvc", "uk.co.caeldev.content.api"})
 @EnableMongoRepositories(basePackages = {"uk.co.caeldev"})
 @EnableAutoConfiguration
 @EnableSpringDataWebSupport
