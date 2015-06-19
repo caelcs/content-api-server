@@ -14,7 +14,6 @@ import uk.co.caeldev.content.api.features.publisher.config.MongoClientTestConfig
 @ComponentScan(basePackages = {"uk.co.caeldev.content.api.config"})
 @EnableMongoRepositories(basePackages = {"uk.co.caeldev.content.api.features.*.repository"})
 @Import({MongoClientTestConfiguration.class, MongoConfiguration.class, MongoSettings.class})
-@ActiveProfiles("test")
 public class TestRepositoryConfiguration {
 
 }
