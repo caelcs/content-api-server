@@ -12,9 +12,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import static uk.co.caeldev.content.api.builders.UserBuilder.userBuilder;
 import static uk.co.caeldev.content.api.features.content.ContentStatus.UNREAD;
@@ -34,12 +32,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         final String userJson = objectMapper.writeValueAsString(userBuilder().username("(8/F#@]L0K?<c<>Jx*I|`0TjP79zjU").build());
 
         //And
-        stubFor(get(urlEqualTo("/sso/user"))
-                .willReturn(aResponse()
-                        .withStatus(OK.value())
-                        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                        .withHeader(AUTHORIZATION, accessToken)
-                        .withBody(userJson)));
+        givenOauthServerMock(accessToken, userJson);
 
         //When
         final ContentResource response = given().port(port).basePath(basePath).log().all()
@@ -74,12 +67,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         final String userJson = objectMapper.writeValueAsString(userBuilder().username("(8/F#@]L0K?<c<>Jx*I|`0TjP79zjU").build());
 
         //And
-        stubFor(get(urlEqualTo("/sso/user"))
-                .willReturn(aResponse()
-                        .withStatus(OK.value())
-                        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                        .withHeader(AUTHORIZATION, accessToken)
-                        .withBody(userJson)));
+        givenOauthServerMock(accessToken, userJson);
 
         //When
         given().port(port).basePath(basePath).log().all()
@@ -108,12 +96,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         final String userJson = objectMapper.writeValueAsString(userBuilder().username("test1").build());
 
         //And
-        stubFor(get(urlEqualTo("/sso/user"))
-                .willReturn(aResponse()
-                        .withStatus(OK.value())
-                        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                        .withHeader(AUTHORIZATION, accessToken)
-                        .withBody(userJson)));
+        givenOauthServerMock(accessToken, userJson);
 
         //When
         given().port(port).basePath(basePath).log().all()
