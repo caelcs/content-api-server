@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import uk.co.caeldev.content.api.config.MongoConfiguration;
 import uk.co.caeldev.content.api.config.MongoSettings;
-import uk.co.caeldev.content.api.features.publisher.config.MongoClientTestConfiguration;
+import uk.co.caeldev.content.api.features.config.MongoClientTestConfiguration;
 
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {"uk.co.caeldev.spring.mvc", "uk.co.caeldev.content.api"})

@@ -8,12 +8,12 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.co.caeldev.content.api.features.config.TestRepositoryConfiguration;
+import uk.co.caeldev.content.api.features.config.RepositoryTestConfiguration;
 
 import static com.lordofthejars.nosqlunit.mongodb.MongoDbRule.MongoDbRuleBuilder.newMongoDbRule;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {TestRepositoryConfiguration.class})
+@SpringApplicationConfiguration(classes = {RepositoryTestConfiguration.class})
 @ActiveProfiles("test")
 public abstract class AbstractRepositoryIntegrationTest {
 

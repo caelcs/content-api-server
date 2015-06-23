@@ -1,4 +1,4 @@
-package uk.co.caeldev.content.api.features.publisher.config;
+package uk.co.caeldev.content.api.features.config;
 
 import com.github.fakemongo.Fongo;
 import com.mongodb.MongoClient;

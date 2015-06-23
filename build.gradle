@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'war'
+apply plugin: 'application'
+apply plugin: 'docker'
 apply plugin: 'spring-boot'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 
@@ -13,6 +14,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("pl.allegro.tech.build:axion-release-plugin:${axionReleasePluginVersion}")
+        classpath("se.transmode.gradle:gradle-docker:${dockerVersion}")
     }
 }
 
@@ -42,13 +44,22 @@ scmVersion {
 
 version = scmVersion.version
 
-war {
+jar {
     baseName = rootProject.name
     version = version
 }
 
-configurations {
-    providedRuntime
+docker {
+    maintainer = 'Adolfo Custidiano <adolfoecs@gmail.com>'
+    baseImage = 'java:7'
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+    applicationName = "${jar.baseName}"
+    tagVersion = "${jar.version}"
+    tag = "adolfoecs/${applicationName}"
+    volume '/tmp'
+    setEnvironment('spring.profiles.active', 'production')
 }
 
 dependencies {
@@ -67,12 +78,9 @@ dependencies {
 
     compile("joda-time:joda-time:${jodaTimeVersion}")
     compile("uk.co.caeldev:spring-security-mongo:${springSecurityMongoVersion}")
-    compile("uk.co.caeldev:spring-mvc-utils:${springMvcUtilsVersion}") {
-
-    }
+    compile("uk.co.caeldev:spring-mvc-utils:${springMvcUtilsVersion}")
     compile("org.apache.commons:commons-lang3:${apacheCommonsLang3Version}")
-
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    compile("org.springframework.boot:spring-boot-starter-tomcat")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.assertj:assertj-core:${assertjCoreVersion}")
