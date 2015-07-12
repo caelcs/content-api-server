@@ -20,8 +20,8 @@ mongo:
   host: mongodb
   port: 27017
   database: contentapi
-  username: dev
-  password: dev
+  username: contentapi
+  password: aw2r8qw!
 
 spring:
   profiles: production

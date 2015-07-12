@@ -55,11 +55,10 @@ docker {
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
+    push = true
     applicationName = "${jar.baseName}"
     tagVersion = "${jar.version}"
     tag = "adolfoecs/${applicationName}"
-    volume '/tmp'
-    setEnvironment('spring.profiles.active', 'production')
 }
 
 dependencies {
