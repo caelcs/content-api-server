@@ -23,6 +23,8 @@ targetCompatibility = 1.7
 
 group = 'uk.co.caeldev'
 
+mainClassName = 'uk.co.caeldev.content.api.Application'
+
 repositories {
   jcenter()
   mavenCentral()
@@ -55,10 +57,19 @@ docker {
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
-    push = true
+    push = false
     applicationName = "${jar.baseName}"
     tagVersion = "${jar.version}"
     tag = "adolfoecs/${applicationName}"
+
+    runCommand("mkdir -p /opt/applications")
+
+    addFile("${buildDir}/distributions/${project.name}-${project.version}.tar", "/opt/applications/")
+
+    workingDir("/opt/applications/${project.name}-${project.version}/")
+
+    entryPoint(["bin/${project.name}"])
+
 }
 
 dependencies {
