@@ -13,22 +13,3 @@ spring:
 server:
   port: 9000
   contextPath: /content-api-server
-
----
-
-mongo:
-  host: mongodb
-  port: 27017
-  database: contentapi
-  username: contentapi
-  password: aw2r8qw!
-
-spring:
-  profiles: production
-  oauth2:
-    resource:
-      userInfoUri: http://oauth2-server:8080/sso/user
-
-server:
-  port: 8080
-  contextPath: /content-api-server
