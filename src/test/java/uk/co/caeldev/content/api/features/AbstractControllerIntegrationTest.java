@@ -31,7 +31,7 @@ public abstract class AbstractControllerIntegrationTest {
     public MongoDbRule mongoDbRule = newMongoDbRule().defaultSpringMongoDb("contentapi");
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(9999));
+    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(9080));
 
     @Autowired
     protected ApplicationContext context;
