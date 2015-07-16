@@ -8,8 +8,8 @@ mongo:
 spring:
   oauth2:
     resource:
-      userInfoUri: http://localhost:9999/sso/user
+      userInfoUri: http://localhost:9080/sso/user
 
 server:
-  port: 9000
+  port: 8080
   contextPath: /content-api-server
