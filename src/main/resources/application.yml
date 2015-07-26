@@ -12,4 +12,4 @@ spring:
 
 server:
   port: 8080
-  contextPath: /content-api-server
+  contextPath: /contentapi
