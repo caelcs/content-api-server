@@ -10,6 +10,11 @@ spring:
     resource:
       userInfoUri: http://localhost:9080/sso/user
 
+info:
+  app:
+    name: contentapi
+    description: Content API Rest Service
+
 server:
   port: 8080
   contextPath: /contentapi
