@@ -3,6 +3,7 @@ package uk.co.caeldev.content.api.features.publisher;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.joda.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,6 +14,8 @@ public class Publisher {
     private String id;
     private String username;
     private String publisherUUID;
+    private Status status;
+    private LocalDateTime creationTime;
 
     public String getId() {
         return id;
@@ -36,6 +39,22 @@ public class Publisher {
 
     public void setPublisherUUID(String publisherUUID) {
         this.publisherUUID = publisherUUID;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(LocalDateTime creationTime) {
+        this.creationTime = creationTime;
     }
 
     @Override

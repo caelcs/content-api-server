@@ -86,7 +86,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
     @Test
     @UsingDataSet(loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void shouldReturnForbiddenStatusWhenPublisherUUIDAnnUsernameDoNotCorrespond() throws Exception {
+    public void shouldReturnForbiddenStatusWhenPublisherUUIDAndUsernameDoNotCorrespond() throws Exception {
 
         //Given
         final String publisherUUID = "44d74b78-a235-45bf-9aa5-79b72e1531ad";

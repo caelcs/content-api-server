@@ -36,7 +36,10 @@ public class ContentController {
         this.contentResourceAssembler = contentResourceAssembler;
     }
 
-    @RequestMapping(value = "/publishers/{publisherUUID}/contents", method = RequestMethod.POST, consumes = {MediaType.TEXT_PLAIN_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/publishers/{publisherUUID}/contents",
+            method = RequestMethod.POST,
+            consumes = {MediaType.TEXT_PLAIN_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
     public HttpEntity<ContentResource> publish(@PathVariable UUID publisherUUID,
                                    @RequestBody String content) {
