@@ -5,6 +5,17 @@ apply plugin: 'docker'
 apply plugin: 'spring-boot'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 
+sourceSets {
+    //Declaring this source set creates compile time and runtime configurations for it.
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/test/integrationTests/java')
+        }
+    }
+}
+
 buildscript {
     repositories {
         jcenter()
@@ -73,6 +84,9 @@ task buildDocker(type: Docker, dependsOn: build) {
 }
 
 configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+
     testCompile.exclude group: 'org.mortbay.jetty', module: 'servlet-api'
 }
 
@@ -110,6 +124,21 @@ dependencies {
     testCompile("org.scribe:scribe:${scribeVersion}")
     testCompile("com.github.tomakehurst:wiremock:${wiremockVersion}")
 
+}
+
+//Create the task that runs the integration tests found from the
+//configured source directory and uses the correct classpath.
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    //If you want to ensure that integration tests are run every time when you invoke
+    //this task, uncomment the following line.
+    //outputs.upToDateWhen { false }
+}
+
+tasks.withType(Test) {
+    reports.html.destination = file("${reporting.baseDir}/${name}")
 }
 
 task wrapper(type: Wrapper) {
