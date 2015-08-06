@@ -9,10 +9,14 @@ sourceSets {
     //Declaring this source set creates compile time and runtime configurations for it.
     integrationTest {
         java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/test/integrationTests/java')
+            srcDir file('src/integrationTest/java')
         }
+        resources {
+            srcDir file('src/integrationTest/resources')
+        }
+
+        compileClasspath += main.output + test.output + configurations.integrationTestCompile
+        runtimeClasspath += compileClasspath + configurations.integrationTestRuntime
     }
 }
 
@@ -124,6 +128,9 @@ dependencies {
     testCompile("org.scribe:scribe:${scribeVersion}")
     testCompile("com.github.tomakehurst:wiremock:${wiremockVersion}")
 
+    integrationTestCompile configurations.testCompile
+    integrationTestRuntime configurations.testRuntime
+
 }
 
 //Create the task that runs the integration tests found from the
@@ -136,6 +143,8 @@ task integrationTest(type: Test) {
     //this task, uncomment the following line.
     //outputs.upToDateWhen { false }
 }
+
+check.dependsOn integrationTest
 
 tasks.withType(Test) {
     reports.html.destination = file("${reporting.baseDir}/${name}")

@@ -38,4 +38,9 @@ public class PublisherServiceImpl implements PublisherService {
 
         return publisherRepository.save(publisher);
     }
+
+    @Override
+    public Publisher getPublisherByUsername(String username) {
+        return null;
+    }
 }

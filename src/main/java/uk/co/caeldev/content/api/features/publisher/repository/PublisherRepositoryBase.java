@@ -8,4 +8,5 @@ public interface PublisherRepositoryBase {
 
     Publisher findByUUID(String publisherUUID);
 
+    Publisher findByUsername(String username);
 }

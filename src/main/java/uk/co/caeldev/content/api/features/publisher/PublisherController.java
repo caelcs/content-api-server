@@ -48,6 +48,14 @@ public class PublisherController {
                     .build();
         }
 
+        if (publisherService.getPublisherByUsername(username) != null) {
+            LOGGER.warn("Publisher already exists.");
+            return ResponseEntityBuilder
+                    .<PublisherResource>responseEntityBuilder()
+                    .statusCode(BAD_REQUEST)
+                    .build();
+        }
+
         final Publisher publisher = publisherService.create(username);
 
         return ResponseEntityBuilder

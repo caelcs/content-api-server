@@ -31,4 +31,10 @@ public class PublisherRepositoryImpl implements PublisherRepositoryBase {
         final Query query = new Query(where("publisherUUID").is(publisherUUID));
         return mongoTemplate.findOne(query, Publisher.class);
     }
+
+    @Override
+    public Publisher findByUsername(String username) {
+        final Query query = new Query(where("username").is(username));
+        return mongoTemplate.findOne(query, Publisher.class);
+    }
 }

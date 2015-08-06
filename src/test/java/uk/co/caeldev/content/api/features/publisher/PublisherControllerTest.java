@@ -72,4 +72,21 @@ public class PublisherControllerTest {
         verifyZeroInteractions(publisherResourceAssembler);
         assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
+
+    @Test
+    public void shouldNotCreatePublisherWhenUsernameExists() throws Exception {
+        //Given
+        final String username = string().next();
+
+        //And
+        given(publisherService.getPublisherByUsername(username)).willReturn(publisherBuilder().username(username).build());
+
+        //When
+        final PublisherResource publisherResource = publisherResourceBuilder().username(username).build();
+        final ResponseEntity<PublisherResource> response = publisherController.create(publisherResource);
+
+        //Then
+        verifyZeroInteractions(publisherResourceAssembler);
+        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+    }
 }

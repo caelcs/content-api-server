@@ -18,7 +18,7 @@ import static uk.co.caeldev.content.api.features.publisher.builders.PublisherRes
 public class PublisherControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Test
-    public void shouldPublishANewResource() throws Exception {
+    public void shouldPublishANewResourceWhenUsernameDoesNotExist() throws Exception {
         //Given
         final String accessToken = UUID.randomUUID().toString();
 

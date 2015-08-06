@@ -6,4 +6,6 @@ public interface PublisherService {
     Publisher getPublisherByUUID(String publisherUUID);
 
     Publisher create(String username);
+
+    Publisher getPublisherByUsername(String username);
 }
