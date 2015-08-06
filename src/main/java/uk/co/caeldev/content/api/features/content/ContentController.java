@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
@@ -41,7 +41,7 @@ public class ContentController {
             consumes = {MediaType.TEXT_PLAIN_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
-    public HttpEntity<ContentResource> publish(@PathVariable UUID publisherUUID,
+    public ResponseEntity<ContentResource> publish(@PathVariable UUID publisherUUID,
                                    @RequestBody String content) {
 
         LOGGER.info("Publishing content");

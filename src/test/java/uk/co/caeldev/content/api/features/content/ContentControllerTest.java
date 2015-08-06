@@ -6,7 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import uk.co.caeldev.content.api.builders.UserBuilder;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.PublisherService;
@@ -65,15 +66,17 @@ public class ContentControllerTest {
         given(contentResourceAssembler.toResource(expectedContent)).willReturn(contentResourceBuilder().content(content).contentUUID(contentUUID).build());
 
         //When
-        final HttpEntity<ContentResource> publishedContent = contentController.publish(publisherUUID, content);
+        final ResponseEntity<ContentResource> response = contentController.publish(publisherUUID, content);
 
         //Then
-        assertThat(publishedContent.getBody()).is(new Condition<ContentResource>() {
+        assertThat(response.getBody()).is(new Condition<ContentResource>() {
             @Override
             public boolean matches(ContentResource value) {
                 return value.getContentUUID().equals(contentUUID) &&
                         value.getContent().equals(content);
             }
         });
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 }

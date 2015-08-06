@@ -1,6 +1,7 @@
 package uk.co.caeldev.content.api.features.publisher.builders;
 
 import org.joda.time.LocalDateTime;
+import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.PublisherResource;
 import uk.co.caeldev.content.api.features.publisher.Status;
 
@@ -22,6 +23,19 @@ public class PublisherResourceBuilder {
 
     public static PublisherResourceBuilder publisherResourceBuilder() {
         return new PublisherResourceBuilder();
+    }
+
+    public PublisherResourceBuilder username(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public PublisherResourceBuilder publisher(final Publisher publisher) {
+        publisherUUID = publisher.getPublisherUUID();
+        username = publisher.getUsername();
+        creationTime = publisher.getCreationTime();
+        status = publisher.getStatus();
+        return this;
     }
 
     public PublisherResource build() {

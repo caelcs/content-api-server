@@ -3,6 +3,7 @@ package uk.co.caeldev.content.api.features.publisher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.co.caeldev.content.api.features.publisher.repository.PublisherRepository;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 
@@ -73,5 +75,26 @@ public class PublisherServiceImplTest {
         assertThat(result.getId()).isNotNull();
         assertThat(result.getPublisherUUID()).isEqualTo(publisherUUID);
         assertThat(result.getUsername()).isEqualTo(username);
+    }
+
+    @Test
+    public void shouldCreatePublisher() throws Exception {
+        //Given
+        final String username = string().next();
+
+        //And
+        final ArgumentCaptor<Publisher> argumentCaptor = ArgumentCaptor.forClass(Publisher.class);
+
+        //When
+        publisherService.create(username);
+
+        //Then
+        verify(publisherRepository).save(argumentCaptor.capture());
+
+        final Publisher argumentCaptorValue = argumentCaptor.getValue();
+        assertThat(argumentCaptorValue.getPublisherUUID()).isNotEmpty();
+        assertThat(argumentCaptorValue.getUsername()).isEqualTo(username);
+        assertThat(argumentCaptorValue.getCreationTime()).isNotNull();
+        assertThat(argumentCaptorValue.getStatus()).isEqualTo(Status.ACTIVE);
     }
 }
