@@ -38,13 +38,16 @@ public class ContentController {
 
     @RequestMapping(value = "/publishers/{publisherUUID}/contents",
             method = RequestMethod.POST,
-            consumes = {MediaType.TEXT_PLAIN_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
     public ResponseEntity<ContentResource> publish(@PathVariable UUID publisherUUID,
-                                   @RequestBody String content) {
+                                   @RequestBody ContentResource contentResource) {
 
         LOGGER.info("Publishing content");
+
+        String content = contentResource.getContent();
+
         if (content.isEmpty()) {
             LOGGER.warn("Content is not Invalid");
             return ResponseEntityBuilder.

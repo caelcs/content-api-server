@@ -13,9 +13,10 @@ import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.co.caeldev.content.api.builders.UserBuilder.userBuilder;
 import static uk.co.caeldev.content.api.features.content.ContentStatus.UNREAD;
+import static uk.co.caeldev.content.api.features.content.builders.ContentResourceBuilder.contentResourceBuilder;
 
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -27,7 +28,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         //Given
         final String publisherUUID = "44d74b78-a235-45bf-9aa5-79b72e1531ad";
         final String accessToken = UUID.randomUUID().toString();
-        final String content = "{}";
+        final String content = "http://www.demo.co.uk";
+        final ContentResource contentResource = contentResourceBuilder().content(content).build();
 
         final String userJson = objectMapper.writeValueAsString(userBuilder().username("(8/F#@]L0K?<c<>Jx*I|`0TjP79zjU").build());
 
@@ -38,8 +40,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         final ContentResource response = given().port(port).basePath(basePath).log().all()
                 .when()
                     .header(AUTHORIZATION, format("Bearer %s", accessToken))
-                    .body(content)
-                    .contentType(TEXT_PLAIN_VALUE)
+                    .body(contentResource)
+                    .contentType(APPLICATION_JSON_VALUE)
                     .post(format("/publishers/%s/contents", publisherUUID))
                 .then()
                     .assertThat()
@@ -63,6 +65,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         final String publisherUUID = "44d74b78-a235-45bf-9aa5-79b72e1531ad";
         final String accessToken = UUID.randomUUID().toString();
         final String content = "";
+        final ContentResource contentResource = contentResourceBuilder().content(content).build();
 
         final String userJson = objectMapper.writeValueAsString(userBuilder().username("(8/F#@]L0K?<c<>Jx*I|`0TjP79zjU").build());
 
@@ -73,8 +76,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         given().port(port).basePath(basePath).log().all()
                 .when()
                     .header(AUTHORIZATION, format("Bearer %s", accessToken))
-                    .body(content)
-                    .contentType(TEXT_PLAIN_VALUE)
+                    .body(contentResource)
+                    .contentType(APPLICATION_JSON_VALUE)
                     .post(format("/publishers/%s/contents", publisherUUID))
                 .then()
                     .assertThat()
@@ -91,7 +94,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         //Given
         final String publisherUUID = "44d74b78-a235-45bf-9aa5-79b72e1531ad";
         final String accessToken = UUID.randomUUID().toString();
-        final String content = "{}";
+        final String content = "http://www.demo.co.uk";
+        final ContentResource contentResource = contentResourceBuilder().content(content).build();
 
         final String userJson = objectMapper.writeValueAsString(userBuilder().username("test1").build());
 
@@ -102,8 +106,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         given().port(port).basePath(basePath).log().all()
                 .when()
                 .header(AUTHORIZATION, format("Bearer %s", accessToken))
-                .body(content)
-                .contentType(TEXT_PLAIN_VALUE)
+                .body(contentResource)
+                .contentType(APPLICATION_JSON_VALUE)
                 .post(format("/publishers/%s/contents", publisherUUID))
                 .then()
                 .assertThat()

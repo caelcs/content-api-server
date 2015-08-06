@@ -66,7 +66,8 @@ public class ContentControllerTest {
         given(contentResourceAssembler.toResource(expectedContent)).willReturn(contentResourceBuilder().content(content).contentUUID(contentUUID).build());
 
         //When
-        final ResponseEntity<ContentResource> response = contentController.publish(publisherUUID, content);
+        final ContentResource contentResource = contentResourceBuilder().content(content).build();
+        final ResponseEntity<ContentResource> response = contentController.publish(publisherUUID, contentResource);
 
         //Then
         assertThat(response.getBody()).is(new Condition<ContentResource>() {
