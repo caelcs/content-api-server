@@ -121,4 +121,16 @@ public class PublisherServiceImplTest {
         assertThat(argumentCaptorValue.getCreationTime()).isNotNull();
         assertThat(argumentCaptorValue.getStatus()).isEqualTo(Status.ACTIVE);
     }
+
+    @Test
+    public void shouldDeletePublisher() throws Exception {
+        //Given
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //When
+        publisherService.delete(publisherUUID);
+
+        //Then
+        verify(publisherRepository).updateStatus(publisherUUID, Status.DELETED);
+    }
 }

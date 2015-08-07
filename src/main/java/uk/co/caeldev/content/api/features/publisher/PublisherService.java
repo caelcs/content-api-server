@@ -8,4 +8,6 @@ public interface PublisherService {
     Publisher create(String username);
 
     Publisher getPublisherByUsername(String username);
+
+    void delete(String publisherUUID);
 }

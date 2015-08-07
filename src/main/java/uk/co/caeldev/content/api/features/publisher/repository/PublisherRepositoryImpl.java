@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
+import uk.co.caeldev.content.api.features.publisher.Status;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -36,5 +37,10 @@ public class PublisherRepositoryImpl implements PublisherRepositoryBase {
     public Publisher findByUsername(String username) {
         final Query query = new Query(where("username").is(username));
         return mongoTemplate.findOne(query, Publisher.class);
+    }
+
+    @Override
+    public void updateStatus(String publisherUUID, Status status) {
+
     }
 }

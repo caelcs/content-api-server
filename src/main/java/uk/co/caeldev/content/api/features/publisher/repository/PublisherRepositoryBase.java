@@ -1,6 +1,7 @@
 package uk.co.caeldev.content.api.features.publisher.repository;
 
 import uk.co.caeldev.content.api.features.publisher.Publisher;
+import uk.co.caeldev.content.api.features.publisher.Status;
 
 public interface PublisherRepositoryBase {
 
@@ -9,4 +10,6 @@ public interface PublisherRepositoryBase {
     Publisher findByUUID(String publisherUUID);
 
     Publisher findByUsername(String username);
+
+    void updateStatus(String publisherUUID, Status status);
 }

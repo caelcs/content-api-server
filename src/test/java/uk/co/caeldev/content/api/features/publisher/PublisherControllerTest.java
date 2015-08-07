@@ -7,11 +7,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
@@ -91,19 +95,15 @@ public class PublisherControllerTest {
     }
 
     @Test
-    public void shouldDeletePublisherWhenPublisherExists() throws Exception {
+    public void shouldChangeStatusToDeletedWhenPublisherExists() throws Exception {
         //Given
-        final String username = string().next();
-
-        //And
-        given(publisherService.getPublisherByUsername(username)).willReturn(publisherBuilder().username(username).build());
+        final UUID publisherUUID = UUID.randomUUID();
 
         //When
-        final PublisherResource publisherResource = publisherResourceBuilder().username(username).build();
-        final ResponseEntity<PublisherResource> response = publisherController.create(publisherResource);
+        final ResponseEntity<PublisherResource> response = publisherController.delete(publisherUUID);
 
         //Then
-        verifyZeroInteractions(publisherResourceAssembler);
-        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        verify(publisherService).delete(publisherUUID.toString());
+        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
 }

@@ -43,4 +43,9 @@ public class PublisherServiceImpl implements PublisherService {
     public Publisher getPublisherByUsername(String username) {
         return publisherRepository.findByUsername(username);
     }
+
+    @Override
+    public void delete(String publisherUUID) {
+        publisherRepository.updateStatus(publisherUUID, Status.DELETED);
+    }
 }

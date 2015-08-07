@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
+
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @EnableOAuth2Resource
@@ -62,6 +62,19 @@ public class PublisherController {
                 .<PublisherResource>responseEntityBuilder()
                 .statusCode(CREATED)
                 .entity(publisherResourceAssembler.toResource(publisher))
+                .build();
+    }
+
+    @RequestMapping(value = "/publishers/{publisherUUID}",
+            method = RequestMethod.DELETE)
+    public ResponseEntity<PublisherResource> delete(@PathVariable final UUID publisherUUID) {
+        LOGGER.info("Deleting publisher");
+
+        publisherService.delete(publisherUUID.toString());
+
+        return ResponseEntityBuilder
+                .<PublisherResource>responseEntityBuilder()
+                .statusCode(NO_CONTENT)
                 .build();
     }
 }
