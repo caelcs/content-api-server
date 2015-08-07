@@ -133,16 +133,12 @@ dependencies {
 
 }
 
-//Create the task that runs the integration tests found from the
-//configured source directory and uses the correct classpath.
-task integrationTest(type: Test) {
+task integrationTest(type: Test, group: Test) {
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
-
-    //If you want to ensure that integration tests are run every time when you invoke
-    //this task, uncomment the following line.
-    //outputs.upToDateWhen { false }
 }
+
+task allTests(dependsOn: ['test', 'integrationTest'])
 
 check.dependsOn integrationTest
 
