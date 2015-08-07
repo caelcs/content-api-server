@@ -91,4 +91,17 @@ public class PublisherRepositoryIntegrationTest extends AbstractRepositoryIntegr
         assertThat(result.getId()).isEqualTo("7749ba97-2e3f-4666-b396-475fd29c6da5");
         assertThat(result.getUsername()).isEqualTo(username);
     }
+
+    @Test
+    @UsingDataSet(loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    public void shouldNotFindPublisherByUsernameWhenUserDoesNotExist() throws Exception {
+        //Given
+        String username = "noexists";
+
+        //When
+        final Publisher result = publisherRepository.findByUsername(username);
+
+        //Then
+        assertThat(result).isNull();
+    }
 }

@@ -78,6 +78,30 @@ public class PublisherServiceImplTest {
     }
 
     @Test
+    public void shouldGetPublisherByUsername() throws Exception {
+        //Given
+        final String publisherUUID = UUID.randomUUID().toString();
+        final String username = string().next();
+        final String id = UUID.randomUUID().toString();
+
+        //And
+        final Publisher expectedPublisher = publisherBuilder()
+                .id(id)
+                .publisherUUID(publisherUUID)
+                .username(username).build();
+
+        given(publisherRepository.findByUsername(username)).willReturn(expectedPublisher);
+
+        //When
+        final Publisher result = publisherService.getPublisherByUsername(username);
+
+        //Then
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getPublisherUUID()).isEqualTo(publisherUUID);
+        assertThat(result.getUsername()).isEqualTo(username);
+    }
+
+    @Test
     public void shouldCreatePublisher() throws Exception {
         //Given
         final String username = string().next();

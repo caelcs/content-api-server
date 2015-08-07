@@ -41,6 +41,6 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public Publisher getPublisherByUsername(String username) {
-        return null;
+        return publisherRepository.findByUsername(username);
     }
 }
