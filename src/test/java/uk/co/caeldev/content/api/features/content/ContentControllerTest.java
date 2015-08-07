@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static uk.co.caeldev.content.api.features.content.builders.ContentResourceBuilder.contentResourceBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
-import static uk.org.fyodor.generators.RDG.string;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContentControllerTest {

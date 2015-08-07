@@ -6,8 +6,8 @@ import uk.co.caeldev.content.api.features.content.ContentStatus;
 
 import java.util.UUID;
 
-import static uk.org.fyodor.generators.RDG.string;
-import static uk.org.fyodor.generators.RDG.value;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.value;
 import static uk.org.fyodor.jodatime.generators.RDG.localDate;
 
 public class ContentResourceBuilder {

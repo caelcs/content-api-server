@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
-import static uk.org.fyodor.generators.RDG.string;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublisherControllerTest {
@@ -75,6 +75,23 @@ public class PublisherControllerTest {
 
     @Test
     public void shouldNotCreatePublisherWhenUsernameExists() throws Exception {
+        //Given
+        final String username = string().next();
+
+        //And
+        given(publisherService.getPublisherByUsername(username)).willReturn(publisherBuilder().username(username).build());
+
+        //When
+        final PublisherResource publisherResource = publisherResourceBuilder().username(username).build();
+        final ResponseEntity<PublisherResource> response = publisherController.create(publisherResource);
+
+        //Then
+        verifyZeroInteractions(publisherResourceAssembler);
+        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
+    public void shouldDeletePublisherWhenPublisherExists() throws Exception {
         //Given
         final String username = string().next();
 

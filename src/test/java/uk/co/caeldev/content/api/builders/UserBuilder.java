@@ -1,15 +1,12 @@
 package uk.co.caeldev.content.api.builders;
 
 import org.springframework.security.core.GrantedAuthority;
-import uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder;
 import uk.co.caeldev.springsecuritymongo.domain.User;
 
 import java.util.Set;
 import java.util.UUID;
 
-import static uk.co.caeldev.content.api.commons.ContentApiRDG.ofGrantedAuthority;
-import static uk.org.fyodor.generators.RDG.set;
-import static uk.org.fyodor.generators.RDG.string;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.*;
 
 public class UserBuilder {
 

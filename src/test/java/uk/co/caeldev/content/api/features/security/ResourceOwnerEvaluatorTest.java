@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static uk.org.fyodor.generators.RDG.string;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceOwnerEvaluatorTest {
