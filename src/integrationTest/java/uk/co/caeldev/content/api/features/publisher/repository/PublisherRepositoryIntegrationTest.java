@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.caeldev.content.api.features.AbstractRepositoryIntegrationTest;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
+import uk.co.caeldev.content.api.features.publisher.Status;
 
 import java.util.UUID;
 
@@ -103,5 +104,46 @@ public class PublisherRepositoryIntegrationTest extends AbstractRepositoryIntegr
 
         //Then
         assertThat(result).isNull();
+    }
+
+    @Test
+    @UsingDataSet(loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    public void shouldUpdateStatusToDeleted() throws Exception {
+        //Given
+        final String publisherUUID = "54d74b78-a235-45bf-9aa5-79b72e1345tf";
+
+        //When
+        final Publisher publisherUpdated = publisherRepository.updateStatus(publisherUUID, Status.DELETED);
+
+        //Then
+        assertThat(publisherUpdated).isNotNull();
+        assertThat(publisherUpdated.getStatus()).isEqualTo(Status.DELETED);
+    }
+
+    @Test
+    @UsingDataSet(loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    public void shouldNotUpdateStatusWhenPublisherUUIDDoesNotExists() throws Exception {
+        //Given
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //When
+        final Publisher publisherUpdated = publisherRepository.updateStatus(publisherUUID, Status.DELETED);
+
+        //Then
+        assertThat(publisherUpdated).isNull();
+    }
+
+    @Test
+    @UsingDataSet(loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    public void shouldNotUpdateWhenPublisherUUIDExistsAndStatusIsSame() throws Exception {
+        //Given
+        final String publisherUUID = "54d74b78-a235-45bf-9aa5-79b72e1345tf";
+
+        //When
+        final Publisher publisherUpdated = publisherRepository.updateStatus(publisherUUID, Status.ACTIVE);
+
+        //Then
+        assertThat(publisherUpdated).isNotNull();
+        assertThat(publisherUpdated.getStatus()).isEqualTo(Status.ACTIVE);
     }
 }

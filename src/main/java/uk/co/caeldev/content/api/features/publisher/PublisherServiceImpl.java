@@ -6,6 +6,7 @@ import uk.co.caeldev.content.api.features.publisher.repository.PublisherReposito
 
 import java.util.UUID;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.joda.time.LocalDateTime.now;
 
 @Component
@@ -46,6 +47,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public void delete(String publisherUUID) {
-        publisherRepository.updateStatus(publisherUUID, Status.DELETED);
+        final Publisher publisherUpdated = publisherRepository.updateStatus(publisherUUID, Status.DELETED);
+        checkNotNull(publisherUpdated);
     }
 }

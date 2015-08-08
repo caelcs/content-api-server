@@ -9,11 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
 
-import java.util.UUID;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @EnableOAuth2Resource
@@ -67,10 +63,10 @@ public class PublisherController {
 
     @RequestMapping(value = "/publishers/{publisherUUID}",
             method = RequestMethod.DELETE)
-    public ResponseEntity<PublisherResource> delete(@PathVariable final UUID publisherUUID) {
+    public ResponseEntity<PublisherResource> delete(@PathVariable String publisherUUID) {
         LOGGER.info("Deleting publisher");
 
-        publisherService.delete(publisherUUID.toString());
+        publisherService.delete(publisherUUID);
 
         return ResponseEntityBuilder
                 .<PublisherResource>responseEntityBuilder()

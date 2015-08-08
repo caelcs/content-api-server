@@ -127,10 +127,26 @@ public class PublisherServiceImplTest {
         //Given
         final String publisherUUID = UUID.randomUUID().toString();
 
+        //And
+        final Publisher expectedPublisher = publisherBuilder().publisherUUID(publisherUUID).build();
+        given(publisherRepository.updateStatus(publisherUUID, Status.DELETED)).willReturn(expectedPublisher);
+
         //When
         publisherService.delete(publisherUUID);
 
         //Then
         verify(publisherRepository).updateStatus(publisherUUID, Status.DELETED);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldNotDeleteWhenPublisherDoesNotExists() throws Exception {
+        //Given
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //And
+        given(publisherRepository.updateStatus(publisherUUID, Status.DELETED)).willReturn(null);
+
+        //When
+        publisherService.delete(publisherUUID);
     }
 }

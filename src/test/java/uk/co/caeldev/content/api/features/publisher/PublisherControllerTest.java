@@ -100,7 +100,7 @@ public class PublisherControllerTest {
         final UUID publisherUUID = UUID.randomUUID();
 
         //When
-        final ResponseEntity<PublisherResource> response = publisherController.delete(publisherUUID);
+        final ResponseEntity<PublisherResource> response = publisherController.delete(publisherUUID.toString());
 
         //Then
         verify(publisherService).delete(publisherUUID.toString());

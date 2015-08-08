@@ -4,7 +4,8 @@
       {
         "_id": "7749ba97-2e3f-4666-b396-475fd29c6da5",
         "username": "test1",
-        "publisherUUID": "54d74b78-a235-45bf-9aa5-79b72e1345tf"
+        "publisherUUID": "54d74b78-a235-45bf-9aa5-79b72e1345tf",
+        "status": "ACTIVE"
       }
     ]
   }

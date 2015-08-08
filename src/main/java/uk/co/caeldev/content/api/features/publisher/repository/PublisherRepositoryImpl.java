@@ -1,8 +1,10 @@
 package uk.co.caeldev.content.api.features.publisher.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.Status;
@@ -40,7 +42,12 @@ public class PublisherRepositoryImpl implements PublisherRepositoryBase {
     }
 
     @Override
-    public void updateStatus(String publisherUUID, Status status) {
+    public Publisher updateStatus(String publisherUUID, Status status) {
+        final Query query = new Query(where("publisherUUID").is(publisherUUID));
 
+        Update update = new Update();
+        update.set("status", status);
+
+        return mongoTemplate.findAndModify(query, update, new FindAndModifyOptions().returnNew(true), Publisher.class);
     }
 }
