@@ -1,7 +1,11 @@
 Feature: Content
-  Scenario: Publish resource sucessfully.
+  Scenario Outline: Should Publish a valid content resource successfully.
     Given a publisher
-    And right permissions
-    And new content to be published
+    And valid credentials to use the API
+    And "<content>" as new content to be published
     When publish new content
-    Then the content should be persisted and be valid
+    Then the response is <status_code>
+
+  Examples:
+  | content                   | status_code |
+  | http://www.google.com     | 201         |

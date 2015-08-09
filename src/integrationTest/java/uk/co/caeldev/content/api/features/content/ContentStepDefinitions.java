@@ -1,5 +1,6 @@
 package uk.co.caeldev.content.api.features.content;
 
+import com.jayway.restassured.response.Response;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -18,13 +19,11 @@ import static com.jayway.restassured.RestAssured.given;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.co.caeldev.content.api.builders.UserBuilder.userBuilder;
 import static uk.co.caeldev.content.api.features.content.ContentStatus.UNREAD;
 import static uk.co.caeldev.content.api.features.content.builders.ContentResourceBuilder.contentResourceBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
-import static uk.org.fyodor.generators.RDG.string;
 
 public class ContentStepDefinitions extends BaseStepDefinitions {
 
@@ -34,7 +33,8 @@ public class ContentStepDefinitions extends BaseStepDefinitions {
     private Publisher publisher;
     private String accessToken;
     private ContentResource contentResource;
-    private ContentResource response;
+    private ContentResource responseBody;
+    private int statusCode;
 
     @Before
     public void startWireMockServer() {
@@ -52,7 +52,7 @@ public class ContentStepDefinitions extends BaseStepDefinitions {
         publisherRepository.save(publisher);
     }
 
-    @And("^right permissions$")
+    @And("^valid credentials to use the API$")
     public void right_permissions() throws Throwable {
         accessToken = UUID.randomUUID().toString();
         final String userJson = objectMapper.writeValueAsString(userBuilder().username(publisher.getUsername()).build());
@@ -60,34 +60,37 @@ public class ContentStepDefinitions extends BaseStepDefinitions {
         givenOauthServerMock(accessToken, userJson);
     }
 
+    @And("^\"([^\"]*)\" as new content to be published$")
+    public void as_new_content_to_be_published(String content) throws Throwable {
+        contentResource = contentResourceBuilder()
+                .content(content)
+                .build();
+    }
+
     @When("^publish new content$")
     public void publish_new_content() throws Throwable {
-        response = given().port(port).basePath(basePath).log().all()
+        Response response = given().port(port).basePath(basePath).log().all()
                 .when()
                 .header(AUTHORIZATION, format("Bearer %s", accessToken))
                 .body(contentResource)
                 .contentType(APPLICATION_JSON_VALUE)
-                .post(format("/publishers/%s/contents", publisher.getPublisherUUID()))
-                .then()
-                .assertThat()
-                .statusCode(CREATED.value())
+                .post(format("/publishers/%s/contents", publisher.getPublisherUUID()));
+
+        responseBody = response.then()
                 .extract().body().as(ContentResource.class);
+
+        statusCode = response.then()
+                .extract().statusCode();
     }
 
-    @And("^new content to be published$")
-    public void new_content_to_be_published() throws Throwable {
-        contentResource = contentResourceBuilder()
-                .content(string().next())
-                .build();
-    }
-
-    @Then("^the content should be persisted and be valid$")
-    public void the_content_should_be_persisted_and_be_valid() throws Throwable {
+    @Then("^the response is (\\d+)$")
+    public void the_response_is_status_code(int expectedStatusCode) throws Throwable {
         verify(getRequestedFor(urlMatching("/sso/user")));
-        assertThat(response.getContent()).isEqualTo(contentResource.getContent());
-        assertThat(response.getContentStatus()).isEqualTo(UNREAD);
-        assertThat(response.getContentUUID()).isNotNull();
-        assertThat(response.getContentUUID()).isNotEmpty();
-        assertThat(response.getCreationDate()).isNotNull();
+        assertThat(statusCode).isEqualTo(expectedStatusCode);
+        assertThat(responseBody.getContent()).isEqualTo(contentResource.getContent());
+        assertThat(responseBody.getContentStatus()).isEqualTo(UNREAD);
+        assertThat(responseBody.getContentUUID()).isNotNull();
+        assertThat(responseBody.getContentUUID()).isNotEmpty();
+        assertThat(responseBody.getCreationDate()).isNotNull();
     }
 }
