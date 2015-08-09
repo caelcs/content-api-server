@@ -6,6 +6,7 @@ build/
 .gradle
 gradle/
 gradlew*
+target/
 
 # Mac
 .DS_Store
