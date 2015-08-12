@@ -1,5 +1,5 @@
 Feature: Content
-  Scenario Outline: Should be able to test API with success and failure scenarios
+  Scenario Outline: Should be able to test Content API Endpoint, including success and failure scenarios
     Given a publisher
     And credentials validation is <are_credentials_valid>
     And "<content>" as new content to be published

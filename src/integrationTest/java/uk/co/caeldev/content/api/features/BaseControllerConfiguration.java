@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @ContextConfiguration(classes = ApplicationTest.class, loader = SpringApplicationContextLoader.class)
 @WebIntegrationTest("server.port:0")
 @ActiveProfiles("test")
-public abstract class BaseStepDefinitions {
+public class BaseControllerConfiguration {
 
     @Value("${local.server.port}")
     protected int port;

@@ -1,4 +1,4 @@
-package uk.co.caeldev.content.api.features.content;
+package uk.co.caeldev.content.api.features.publisher;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.java.After;
@@ -9,7 +9,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.caeldev.content.api.features.BaseControllerConfiguration;
-import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.repository.PublisherRepository;
 
 import java.util.UUID;
@@ -22,21 +21,20 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.co.caeldev.content.api.builders.UserBuilder.userBuilder;
-import static uk.co.caeldev.content.api.features.content.ContentStatus.UNREAD;
-import static uk.co.caeldev.content.api.features.content.builders.ContentResourceBuilder.contentResourceBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
+import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
 import static uk.org.fyodor.generators.RDG.string;
 
-public class ContentStepDefinitions extends BaseControllerConfiguration {
+public class PublisherStepDefinitions extends BaseControllerConfiguration {
 
     @Autowired
     private PublisherRepository publisherRepository;
-    
-    private Publisher publisher;
+
+    private PublisherResource publisherResourceToBePersist;
     private String accessToken;
-    private ContentResource contentResource;
-    private ContentResource responseBody;
     private int statusCode;
+    private PublisherResource responseBody;
+    private Publisher existingPublisher;
 
     @Before
     public void startWireMockServer() {
@@ -48,36 +46,27 @@ public class ContentStepDefinitions extends BaseControllerConfiguration {
         super.stopWireMockServer();
     }
 
-    @Given("^a publisher$")
-    public void a_publisher() throws Throwable {
-        publisher = publisherBuilder().build();
-        publisherRepository.save(publisher);
+    @Given("^a username \"([^\"]*)\"$")
+    public void a_username(String username) throws Throwable {
+        publisherResourceToBePersist = publisherResourceBuilder().username(username).build();
     }
 
-    @And("^credentials validation is (.+)$")
-    public void credentials_validation_is_are_credentials_valid(boolean areCredentialsValid) throws Throwable {
+    @And("^with valid credentials$")
+    public void with_valid_credentials() throws Throwable {
         accessToken = UUID.randomUUID().toString();
-        String username = areCredentialsValid? publisher.getUsername() : string().next();
-        final String userJson = objectMapper.writeValueAsString(userBuilder().username(username).build());
+        final String userJson = objectMapper.writeValueAsString(userBuilder().username(string().next()).build());
 
         givenOauthServerMock(accessToken, userJson);
     }
 
-    @And("^\"([^\"]*)\" as new content to be published$")
-    public void as_new_content_to_be_published(String content) throws Throwable {
-        contentResource = contentResourceBuilder()
-                .content(content)
-                .build();
-    }
-
-    @When("^publish new content$")
-    public void publish_new_content() throws Throwable {
-        Response response = given().port(port).basePath(basePath).log().all()
+    @When("^create publisher$")
+    public void create_publisher() throws Throwable {
+        final Response response = given().port(port).basePath(basePath).log().all()
                 .when()
                 .header(AUTHORIZATION, format("Bearer %s", accessToken))
-                .body(contentResource)
+                .body(publisherResourceToBePersist)
                 .contentType(APPLICATION_JSON_VALUE)
-                .post(format("/publishers/%s/contents", publisher.getPublisherUUID()));
+                .post("/publishers");
 
         statusCode = response.then()
                 .extract().statusCode();
@@ -86,7 +75,7 @@ public class ContentStepDefinitions extends BaseControllerConfiguration {
 
         if (statusCode == CREATED.value()) {
             responseBody = response.then()
-                    .extract().body().as(ContentResource.class);
+                    .extract().body().as(PublisherResource.class);
         }
     }
 
@@ -95,11 +84,21 @@ public class ContentStepDefinitions extends BaseControllerConfiguration {
         verify(getRequestedFor(urlMatching("/sso/user")));
         assertThat(statusCode).isEqualTo(expectedStatusCode);
         if (statusCode == CREATED.value()) {
-            assertThat(responseBody.getContent()).isEqualTo(contentResource.getContent());
-            assertThat(responseBody.getContentStatus()).isEqualTo(UNREAD);
-            assertThat(responseBody.getContentUUID()).isNotNull();
-            assertThat(responseBody.getContentUUID()).isNotEmpty();
-            assertThat(responseBody.getCreationDate()).isNotNull();
+            assertThat(responseBody.getStatus()).isEqualTo(Status.ACTIVE);
+            assertThat(responseBody.getPublisherUUID()).isNotNull();
+            assertThat(responseBody.getUsername()).isEqualTo(publisherResourceToBePersist.getUsername());
+            assertThat(responseBody.getCreationTime()).isNotNull();
         }
+    }
+
+    @Given("^an existing publisher with username \"([^\"]*)\"$")
+    public void an_existing_publisher_with_username(String username) throws Throwable {
+        existingPublisher = publisherBuilder().username(username).build();
+        publisherRepository.save(existingPublisher);
+    }
+
+    @And("^a new Publisher with the same username$")
+    public void a_new_Publisher_with_the_same_username() throws Throwable {
+        publisherResourceToBePersist = publisherResourceBuilder().username(existingPublisher.getUsername()).build();
     }
 }
