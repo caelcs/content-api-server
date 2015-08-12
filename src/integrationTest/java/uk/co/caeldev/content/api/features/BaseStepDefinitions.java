@@ -2,6 +2,7 @@ package uk.co.caeldev.content.api.features;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -25,9 +26,19 @@ public abstract class BaseStepDefinitions {
     @Value("${server.contextPath}")
     protected String basePath;
 
+    protected WireMockServer wireMockServer = new WireMockServer(9080);
+
     protected ObjectMapper objectMapper = new ObjectMapper();
 
-    protected WireMockServer wireMockServer = new WireMockServer(9080);
+    protected void startWireMockServer() {
+        wireMockServer.start();
+        WireMock.configureFor(9080);
+        WireMock.reset();
+    }
+
+    protected void stopWireMockServer() {
+        wireMockServer.stop();
+    }
 
     protected void givenOauthServerMock(String accessToken, String userJson) {
         stubFor(get(urlEqualTo("/sso/user"))

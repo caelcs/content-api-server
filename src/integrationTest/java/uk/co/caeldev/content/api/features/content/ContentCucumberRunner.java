@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         plugin = {"pretty", "html:target/cucumber/content",
                 "json:target/cucumber/content/cucumber.json",
-                "junit:target/junit/cucumber/content/cucumber.xml"},
+                "junit:target/cucumber/content/cucumber.xml"},
         features = "src/integrationTest/resources/cucumber/uk/co/caeldev/content/api/features/content",
         glue = {"uk.co.caeldev.content.api.features.content"})
 public class ContentCucumberRunner {

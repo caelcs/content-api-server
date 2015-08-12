@@ -1,11 +1,14 @@
 Feature: Content
-  Scenario Outline: Should Publish a valid content resource successfully.
+  Scenario Outline: Should be able to test API with success and failure scenarios
     Given a publisher
-    And valid credentials to use the API
+    And credentials validation is <are_credentials_valid>
     And "<content>" as new content to be published
     When publish new content
     Then the response is <status_code>
 
   Examples:
-  | content                   | status_code |
-  | http://www.google.com     | 201         |
+  | content                   | status_code | are_credentials_valid |
+  | http://www.google.com     | 201         | true                  |
+  |                           | 400         | true                  |
+  | http://www.google.com     | 403         | false                 |
+  |                           | 403         | false                 |

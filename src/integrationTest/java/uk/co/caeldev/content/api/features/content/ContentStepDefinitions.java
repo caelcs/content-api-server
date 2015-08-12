@@ -19,17 +19,19 @@ import static com.jayway.restassured.RestAssured.given;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.co.caeldev.content.api.builders.UserBuilder.userBuilder;
 import static uk.co.caeldev.content.api.features.content.ContentStatus.UNREAD;
 import static uk.co.caeldev.content.api.features.content.builders.ContentResourceBuilder.contentResourceBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
+import static uk.org.fyodor.generators.RDG.string;
 
 public class ContentStepDefinitions extends BaseStepDefinitions {
 
     @Autowired
     private PublisherRepository publisherRepository;
-
+    
     private Publisher publisher;
     private String accessToken;
     private ContentResource contentResource;
@@ -38,12 +40,12 @@ public class ContentStepDefinitions extends BaseStepDefinitions {
 
     @Before
     public void startWireMockServer() {
-        wireMockServer.start();
+        super.startWireMockServer();
     }
 
     @After
     public void stopWireMockServer() {
-        wireMockServer.stop();
+        super.stopWireMockServer();
     }
 
     @Given("^a publisher$")
@@ -52,10 +54,11 @@ public class ContentStepDefinitions extends BaseStepDefinitions {
         publisherRepository.save(publisher);
     }
 
-    @And("^valid credentials to use the API$")
-    public void right_permissions() throws Throwable {
+    @And("^credentials validation is (.+)$")
+    public void credentials_validation_is_are_credentials_valid(boolean areCredentialsValid) throws Throwable {
         accessToken = UUID.randomUUID().toString();
-        final String userJson = objectMapper.writeValueAsString(userBuilder().username(publisher.getUsername()).build());
+        String username = areCredentialsValid? publisher.getUsername() : string().next();
+        final String userJson = objectMapper.writeValueAsString(userBuilder().username(username).build());
 
         givenOauthServerMock(accessToken, userJson);
     }
@@ -76,21 +79,27 @@ public class ContentStepDefinitions extends BaseStepDefinitions {
                 .contentType(APPLICATION_JSON_VALUE)
                 .post(format("/publishers/%s/contents", publisher.getPublisherUUID()));
 
-        responseBody = response.then()
-                .extract().body().as(ContentResource.class);
-
         statusCode = response.then()
                 .extract().statusCode();
+
+        responseBody = null;
+
+        if (statusCode == CREATED.value()) {
+            responseBody = response.then()
+                    .extract().body().as(ContentResource.class);
+        }
     }
 
     @Then("^the response is (\\d+)$")
     public void the_response_is_status_code(int expectedStatusCode) throws Throwable {
         verify(getRequestedFor(urlMatching("/sso/user")));
         assertThat(statusCode).isEqualTo(expectedStatusCode);
-        assertThat(responseBody.getContent()).isEqualTo(contentResource.getContent());
-        assertThat(responseBody.getContentStatus()).isEqualTo(UNREAD);
-        assertThat(responseBody.getContentUUID()).isNotNull();
-        assertThat(responseBody.getContentUUID()).isNotEmpty();
-        assertThat(responseBody.getCreationDate()).isNotNull();
+        if (statusCode == CREATED.value()) {
+            assertThat(responseBody.getContent()).isEqualTo(contentResource.getContent());
+            assertThat(responseBody.getContentStatus()).isEqualTo(UNREAD);
+            assertThat(responseBody.getContentUUID()).isNotNull();
+            assertThat(responseBody.getContentUUID()).isNotEmpty();
+            assertThat(responseBody.getCreationDate()).isNotNull();
+        }
     }
 }
