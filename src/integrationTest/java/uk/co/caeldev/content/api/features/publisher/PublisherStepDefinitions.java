@@ -101,4 +101,15 @@ public class PublisherStepDefinitions extends BaseControllerConfiguration {
     public void a_new_Publisher_with_the_same_username() throws Throwable {
         publisherResourceToBePersist = publisherResourceBuilder().username(existingPublisher.getUsername()).build();
     }
+
+    @When("^delete publisher$")
+    public void delete_publisher() throws Throwable {
+        final Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", accessToken))
+                .delete("/publishers/{publisherUUID}", existingPublisher.getPublisherUUID());
+
+        statusCode = response.then()
+                .extract().statusCode();
+    }
 }
