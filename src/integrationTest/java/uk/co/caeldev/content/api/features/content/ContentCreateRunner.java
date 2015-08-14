@@ -11,5 +11,5 @@ import org.junit.runner.RunWith;
                 "junit:target/cucumber/content/cucumber.xml"},
         features = "src/integrationTest/resources/cucumber/uk/co/caeldev/content/api/features/content",
         glue = {"uk.co.caeldev.content.api.features.content"})
-public class ContentCucumberRunner {
+public class ContentCreateRunner {
 }

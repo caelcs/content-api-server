@@ -27,7 +27,7 @@ import static uk.co.caeldev.content.api.features.content.builders.ContentResourc
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.org.fyodor.generators.RDG.string;
 
-public class ContentStepDefinitions extends BaseControllerConfiguration {
+public class ContentCreateStepDefinitions extends BaseControllerConfiguration {
 
     @Autowired
     private PublisherRepository publisherRepository;

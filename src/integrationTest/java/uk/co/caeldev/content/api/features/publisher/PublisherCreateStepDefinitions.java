@@ -9,6 +9,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.caeldev.content.api.features.BaseControllerConfiguration;
+import uk.co.caeldev.content.api.features.publisher.Publisher;
+import uk.co.caeldev.content.api.features.publisher.PublisherResource;
+import uk.co.caeldev.content.api.features.publisher.Status;
 import uk.co.caeldev.content.api.features.publisher.repository.PublisherRepository;
 
 import java.util.UUID;
@@ -25,7 +28,7 @@ import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBui
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
 import static uk.org.fyodor.generators.RDG.string;
 
-public class PublisherStepDefinitions extends BaseControllerConfiguration {
+public class PublisherCreateStepDefinitions extends BaseControllerConfiguration {
 
     @Autowired
     private PublisherRepository publisherRepository;
