@@ -10,6 +10,6 @@ import org.junit.runner.RunWith;
                 "json:target/cucumber/content/cucumber.json",
                 "junit:target/cucumber/content/cucumber.xml"},
         features = "src/integrationTest/resources/cucumber/uk/co/caeldev/content/api/features/publisher",
-        glue = {"uk.co.caeldev.content.api.features.publisher.create"})
+        glue = {"uk.co.caeldev.content.api.features.publisher"})
 public class PublisherCreateRunner {
 }
