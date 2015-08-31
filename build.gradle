@@ -128,8 +128,8 @@ dependencies {
     testCompile("org.scribe:scribe:${scribeVersion}")
     testCompile("com.github.tomakehurst:wiremock:${wiremockVersion}")
 
-    integrationTestCompile configurations.testCompile
-    integrationTestRuntime configurations.testRuntime
+    testCompile("info.cukes:cucumber-junit:${cucumberVersion}")
+    testCompile("info.cukes:cucumber-spring:${cucumberVersion}")
 
 }
 
