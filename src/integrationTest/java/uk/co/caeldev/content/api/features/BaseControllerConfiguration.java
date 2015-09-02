@@ -6,7 +6,7 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = ApplicationTest.class, loader = SpringApplicationContextLoader.class)
+@ContextConfiguration(classes = ApplicationTestConfiguration.class, loader = SpringApplicationContextLoader.class)
 @WebIntegrationTest("server.port:0")
 @ActiveProfiles("test")
 public class BaseControllerConfiguration {
