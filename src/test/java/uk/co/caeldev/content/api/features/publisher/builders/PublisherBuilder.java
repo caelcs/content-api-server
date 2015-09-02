@@ -41,6 +41,11 @@ public class PublisherBuilder {
         return this;
     }
 
+    public PublisherBuilder status(Status status) {
+        this.status = status;
+        return this;
+    }
+
     public Publisher build() {
         final Publisher publisher = new Publisher();
         publisher.setId(id);

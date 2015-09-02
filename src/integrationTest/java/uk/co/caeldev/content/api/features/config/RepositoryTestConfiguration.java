@@ -13,5 +13,4 @@ import uk.co.caeldev.content.api.config.*;
 @EnableMongoRepositories(basePackages = {"uk.co.caeldev.content.api.features.*.repository"})
 @Import({MongoClientTestConfiguration.class, MongoConfiguration.class, MongoSettings.class})
 public class RepositoryTestConfiguration {
-
 }

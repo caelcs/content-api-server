@@ -122,7 +122,6 @@ dependencies {
     testCompile("uk.org.fyodor:fyodor-junit:${fyodorVersion}")
     testCompile("uk.org.fyodor:fyodor-jodatime:${fyodorVersion}")
     testCompile("com.github.fakemongo:fongo:${fongoVersion}")
-    testCompile("com.lordofthejars:nosqlunit-mongodb:${nosqlunitMongodbVersion}")
     testCompile("com.jayway.jsonpath:json-path:${jsonPathVersion}")
     testCompile("com.jayway.restassured:rest-assured:${restAssuredVersion}")
     testCompile("org.scribe:scribe:${scribeVersion}")
