@@ -1,6 +1,7 @@
 package uk.co.caeldev.content.api.features.content.controller;
 
 import com.jayway.restassured.response.Response;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.caeldev.content.api.features.BaseControllerConfiguration;
 import uk.co.caeldev.content.api.features.common.AuthenticationSteps;
 import uk.co.caeldev.content.api.features.content.ContentResource;
+import uk.co.caeldev.content.api.features.content.repository.ContentRepository;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.repository.PublisherRepository;
 
@@ -26,6 +28,7 @@ import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBui
 public class ContentSteps extends BaseControllerConfiguration {
 
     private final PublisherRepository publisherRepository;
+    private final ContentRepository contentRepository;
     private final AuthenticationSteps authenticationSteps;
 
     private Publisher publisher;
@@ -35,9 +38,17 @@ public class ContentSteps extends BaseControllerConfiguration {
 
     @Autowired
     public ContentSteps(final PublisherRepository publisherRepository,
+                        final ContentRepository contentRepository,
                         final AuthenticationSteps authenticationSteps) {
         this.publisherRepository = publisherRepository;
+        this.contentRepository = contentRepository;
         this.authenticationSteps = authenticationSteps;
+    }
+
+    @Before
+    public void cleanMongo() {
+        contentRepository.deleteAll();
+        publisherRepository.deleteAll();
     }
 
     @Given("^a publisher with username (.+)$")

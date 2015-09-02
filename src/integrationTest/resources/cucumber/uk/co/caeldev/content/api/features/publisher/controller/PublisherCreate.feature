@@ -8,7 +8,6 @@ Feature: Publisher
     Examples:
     | credential_username | username    | status_code |
     | exitingUser         | randomUser  | 201         |
-    | fakeUser            | randomUser  | 400         |
 
   Scenario Outline: As a consumer, I should be able to test the creation of a new publisher when username has been used, including success and failure scenarios
     Given an existing publisher with username <username>

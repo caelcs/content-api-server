@@ -1,5 +1,6 @@
 package uk.co.caeldev.content.api.features.publisher.repository;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -24,6 +25,11 @@ public class PublisherRepositorySteps extends BaseRepositoryConfiguration {
     @Autowired
     public PublisherRepositorySteps(final PublisherRepository publisherRepository) {
         this.publisherRepository = publisherRepository;
+    }
+
+    @Before
+    public void cleanMongo() {
+        publisherRepository.deleteAll();
     }
 
     @Given("^a random new publisher$")

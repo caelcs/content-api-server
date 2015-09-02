@@ -23,7 +23,7 @@ Feature: Publisher Repository
 
     Examples:
       | id                                   | publisher_uuid                        | username         | status |
-      | 48311714-6b16-425f-b766-7700a0622689 | 847e945f-6b46-4cff-91c4-a2efe878aa6c  | random2Username  | ACTIVE |
+      | 48311714-6b16-425f-b766-7700a0622689 | 847e945f-6b46-4cff-91c4-a2efe878aa6c  | randomUsername  | ACTIVE |
 
   Scenario Outline: Expecting not to be able to find a publisher when username does not exist.
 

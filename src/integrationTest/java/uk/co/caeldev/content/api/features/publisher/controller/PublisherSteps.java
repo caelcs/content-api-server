@@ -1,6 +1,7 @@
 package uk.co.caeldev.content.api.features.publisher.controller;
 
 import com.jayway.restassured.response.Response;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -38,6 +39,11 @@ public class PublisherSteps extends BaseControllerConfiguration {
                           final AuthenticationSteps authenticationSteps) {
         this.publisherRepository = publisherRepository;
         this.authenticationSteps = authenticationSteps;
+    }
+
+    @Before
+    public void cleanMongo() {
+        publisherRepository.deleteAll();
     }
 
     @Given("^a username (.+)$")
