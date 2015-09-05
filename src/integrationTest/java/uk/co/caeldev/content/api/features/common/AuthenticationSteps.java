@@ -37,9 +37,17 @@ public class AuthenticationSteps {
     }
 
     @And("^credential details have been provided using username (.+)$")
-    public void credential_details_with_username_credential_username(String credentialUsername) throws Throwable {
+    public void credential_details_have_been_provided_using_username(String credentialUsername) throws Throwable {
         accessToken = UUID.randomUUID().toString();
         final String userJson = objectMapper.writeValueAsString(userBuilder().username(credentialUsername).build());
+
+        givenOauthServerMock(accessToken, userJson);
+    }
+
+    @And("^credential details have been provided with user role and using username (.+)$")
+    public void credential_details_have_been_provided_with_admin_role_and_using_username(String credentialUsername) throws Throwable {
+        accessToken = UUID.randomUUID().toString();
+        final String userJson = objectMapper.writeValueAsString(userBuilder().username(credentialUsername).roleUser().build());
 
         givenOauthServerMock(accessToken, userJson);
     }

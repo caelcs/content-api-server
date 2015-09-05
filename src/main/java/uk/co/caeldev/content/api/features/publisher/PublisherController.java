@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
 
@@ -31,6 +32,7 @@ public class PublisherController {
             method = RequestMethod.POST,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PublisherResource> create(@RequestBody final PublisherResource publisherResource) {
         LOGGER.info("Creating publisher");
 
@@ -63,6 +65,7 @@ public class PublisherController {
 
     @RequestMapping(value = "/publishers/{publisherUUID}",
             method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PublisherResource> delete(@PathVariable String publisherUUID) {
         LOGGER.info("Deleting publisher");
 
