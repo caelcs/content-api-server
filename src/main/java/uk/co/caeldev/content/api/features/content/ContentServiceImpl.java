@@ -33,4 +33,10 @@ public class ContentServiceImpl implements ContentService {
 
         return contentRepository.save(contentToBePublished);
     }
+
+    @Override
+    public Content findOneByUUID(String uuid) {
+        checkArgument(uuid != null && !uuid.isEmpty(), "UUID is null or empty.");
+        return contentRepository.findOneByUUID(uuid);
+    }
 }

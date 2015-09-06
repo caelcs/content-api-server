@@ -11,6 +11,7 @@ import uk.co.caeldev.content.api.features.content.repository.ContentRepository;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 
@@ -47,5 +48,21 @@ public class ContentServiceImplTest {
         assertThat(expectedResult.getContentUUID()).isNotNull();
         assertThat(expectedResult.getStatus()).isEqualTo(ContentStatus.UNREAD);
         assertThat(expectedResult.getPublisherId()).isEqualTo(id);
+    }
+
+    @Test
+    public void shouldFindContentByUUID() throws Exception {
+        //Given
+        final String uuid = UUID.randomUUID().toString();
+
+        //And
+        final Content expectedContent = ContentBuilder.contentBuilder().contentUUID(uuid).build();
+        given(contentRepository.findOneByUUID(uuid)).willReturn(expectedContent);
+
+        //When
+        final Content result = contentService.findOneByUUID(uuid);
+
+        //Then
+        assertThat(result).isNotNull();
     }
 }
