@@ -50,4 +50,9 @@ public class PublisherServiceImpl implements PublisherService {
         final Publisher publisherUpdated = publisherRepository.updateStatus(publisherUUID, Status.DELETED);
         checkNotNull(publisherUpdated);
     }
+
+    @Override
+    public Publisher update(final Publisher publisher) {
+        return publisherRepository.update(publisher);
+    }
 }

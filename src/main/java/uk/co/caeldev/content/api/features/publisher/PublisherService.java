@@ -10,4 +10,6 @@ public interface PublisherService {
     Publisher getPublisherByUsername(String username);
 
     void delete(String publisherUUID);
+
+    Publisher update(Publisher publisher);
 }

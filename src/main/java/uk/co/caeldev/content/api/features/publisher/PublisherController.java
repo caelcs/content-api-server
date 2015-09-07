@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import uk.co.caeldev.content.api.features.content.ContentResource;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
 
 import static org.springframework.http.HttpStatus.*;
@@ -74,6 +75,25 @@ public class PublisherController {
         return ResponseEntityBuilder
                 .<PublisherResource>responseEntityBuilder()
                 .statusCode(NO_CONTENT)
+                .build();
+    }
+
+    @RequestMapping(value = "/publishers/{publisherUUID}",
+            method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<PublisherResource> update(@PathVariable String publisherUUID,
+                                                    @RequestBody final PublisherResource publisherResource) {
+        LOGGER.info("Updating publisher");
+
+        final Publisher publisherSaved = publisherService.getPublisherByUUID(publisherUUID);
+
+        final Publisher publisherToBeUpdated = publisherResourceAssembler.toDomain(publisherResource, publisherSaved);
+
+        publisherService.update(publisherToBeUpdated);
+
+        return ResponseEntityBuilder
+                .<PublisherResource>responseEntityBuilder()
+                .statusCode(OK)
                 .build();
     }
 }
