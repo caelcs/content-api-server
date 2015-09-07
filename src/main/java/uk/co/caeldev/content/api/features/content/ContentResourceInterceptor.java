@@ -1,6 +1,5 @@
 package uk.co.caeldev.content.api.features.content;
 
-import uk.co.caeldev.content.api.features.content.ContentService;
 import uk.co.caeldev.spring.mvc.ResourceInterceptor;
 
 public class ContentResourceInterceptor extends ResourceInterceptor {
@@ -17,6 +16,6 @@ public class ContentResourceInterceptor extends ResourceInterceptor {
 
     @Override
     protected String getUUIDVariableName() {
-        return "uuid";
+        return "content_uuid";
     }
 }
