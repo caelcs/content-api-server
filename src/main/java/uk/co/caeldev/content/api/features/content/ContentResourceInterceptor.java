@@ -1,4 +1,4 @@
-package uk.co.caeldev.content.api.features.common;
+package uk.co.caeldev.content.api.features.content;
 
 import uk.co.caeldev.content.api.features.content.ContentService;
 import uk.co.caeldev.spring.mvc.ResourceInterceptor;

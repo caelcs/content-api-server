@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
                 "json:target/cucumber/content/repository/cucumber.json",
                 "junit:target/cucumber/content/repository/cucumber.xml"},
         features = "src/integrationTest/resources/cucumber/uk/co/caeldev/content/api/features/content/repository",
-        glue = {"uk.co.caeldev.content.api.features.content.repository"})
+        glue = {"uk.co.caeldev.content.api.features.content.repository",
+                "uk.co.caeldev.content.api.features.publisher.repository"})
 public class ContentRepositoryRunner {
 }

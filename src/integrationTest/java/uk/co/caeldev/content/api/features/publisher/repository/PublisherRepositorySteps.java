@@ -9,6 +9,7 @@ import uk.co.caeldev.content.api.features.BaseRepositoryConfiguration;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.Status;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -98,5 +99,10 @@ public class PublisherRepositorySteps extends BaseRepositoryConfiguration {
     @Then("^should not update any publisher$")
     public void should_not_update_any_publisher() throws Throwable {
         assertThat(result).isNull();
+    }
+
+    @Given("^a persisted publisher$")
+    public void a_persisted_publisher(List<Publisher> publishers) throws Throwable {
+        publisherRepository.save(publishers);
     }
 }

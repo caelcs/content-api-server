@@ -65,4 +65,20 @@ public class ContentServiceImplTest {
         //Then
         assertThat(result).isNotNull();
     }
+
+    @Test
+    public void shouldNotFindContentUsingInvalidUUID() throws Exception {
+        //Given
+        final String uuid = UUID.randomUUID().toString();
+
+        //And
+        final Content expectedContent = ContentBuilder.contentBuilder().contentUUID(uuid).build();
+        given(contentRepository.findOneByUUID(uuid)).willReturn(null);
+
+        //When
+        final Content result = contentService.findOneByUUID(uuid);
+
+        //Then
+        assertThat(result).isNull();
+    }
 }
