@@ -78,7 +78,9 @@ public class PublisherController {
     }
 
     @RequestMapping(value = "/publishers/{publisherUUID}",
-            method = RequestMethod.PUT)
+            method = RequestMethod.PUT,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PublisherResource> update(@PathVariable String publisherUUID,
                                                     @RequestBody final PublisherResource publisherResource) {

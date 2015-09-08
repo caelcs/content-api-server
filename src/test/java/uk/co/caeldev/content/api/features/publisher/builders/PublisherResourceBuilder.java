@@ -38,8 +38,6 @@ public class PublisherResourceBuilder {
         return this;
     }
 
-
-
     public PublisherResourceBuilder uuid(String publisherUUID) {
         this.publisherUUID = publisherUUID;
         return this;
