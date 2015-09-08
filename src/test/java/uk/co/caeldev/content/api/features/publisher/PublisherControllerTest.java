@@ -13,12 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
-import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublisherControllerTest {
@@ -105,5 +103,46 @@ public class PublisherControllerTest {
         //Then
         verify(publisherService).delete(publisherUUID.toString());
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+    }
+
+    @Test
+    public void shouldUpdatePublisherWhenExists() throws Exception {
+        //Given
+        final String publisherUUID = UUID.randomUUID().toString();
+        final Publisher publisherSaved = publisherBuilder().publisherUUID(publisherUUID).username(string().next()).status(Status.ACTIVE).build();
+        final PublisherResource publisherResource = publisherResourceBuilder()
+                .publisher(publisherSaved)
+                .build();
+
+        //And
+        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(publisherSaved);
+
+        //And
+        final Publisher expectedPublisherToBeUpdated = publisherBuilder()
+                .publisherUUID(publisherResource.getPublisherUUID())
+                .status(publisherResource.getStatus())
+                .username(publisherResource.getUsername())
+                .build();
+
+        given(publisherResourceAssembler.toDomain(publisherResource, publisherSaved))
+                .willReturn(expectedPublisherToBeUpdated);
+
+        //And
+        given(publisherService.update(expectedPublisherToBeUpdated)).willReturn(expectedPublisherToBeUpdated);
+
+        //And
+        final PublisherResource publisherResourceUpdated = publisherResourceBuilder()
+                .publisher(expectedPublisherToBeUpdated)
+                .build();
+
+        given(publisherResourceAssembler.toResource(expectedPublisherToBeUpdated))
+                .willReturn(publisherResourceUpdated);
+
+        //When
+        final ResponseEntity<PublisherResource> response = publisherController.update(publisherUUID, publisherResource);
+
+        //Then
+        assertThat(response.getBody().getStatus()).isEqualTo(publisherResource.getStatus());
+        assertThat(response.getStatusCode()).isEqualTo(OK);
     }
 }
