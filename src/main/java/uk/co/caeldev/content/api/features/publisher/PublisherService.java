@@ -11,5 +11,5 @@ public interface PublisherService {
 
     void delete(String publisherUUID);
 
-    Publisher update(Publisher publisher);
+    Publisher update(Publisher publisherToBeUpdated);
 }

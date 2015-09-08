@@ -52,7 +52,9 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public Publisher update(final Publisher publisher) {
-        return publisherRepository.update(publisher);
+    public Publisher update(Publisher publisherToBeUpdated) {
+        final Publisher publisherUpdated = publisherRepository.updateStatus(publisherToBeUpdated.getPublisherUUID(), publisherToBeUpdated.getStatus());
+        checkNotNull(publisherUpdated);
+        return publisherToBeUpdated;
     }
 }

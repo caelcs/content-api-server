@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder;
 import uk.co.caeldev.content.api.features.publisher.repository.PublisherRepository;
 
 import java.util.UUID;
@@ -152,18 +151,18 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void shouldUpdatePublisherWhenUUIDIsValid() throws Exception {
+    public void shouldUpdatePublisherStatus() throws Exception {
         //Given
         final String publisherUUID = UUID.randomUUID().toString();
+        final Publisher publisherToBeUpdated = publisherBuilder().publisherUUID(publisherUUID).status(Status.DELETED).build();
 
         //And
-        final Publisher publisher = PublisherBuilder.publisherBuilder().publisherUUID(publisherUUID).build();
-        given(publisherRepository.update(publisher)).willReturn(publisher);
+        given(publisherRepository.updateStatus(publisherToBeUpdated.getPublisherUUID(), publisherToBeUpdated.getStatus())).willReturn(publisherToBeUpdated);
 
         //When
-        final Publisher result = publisherService.update(publisher);
+        final Publisher result = publisherService.update(publisherToBeUpdated);
 
         //Then
-        assertThat(result).isEqualTo(publisher);
+        assertThat(result).isEqualTo(publisherToBeUpdated);
     }
 }

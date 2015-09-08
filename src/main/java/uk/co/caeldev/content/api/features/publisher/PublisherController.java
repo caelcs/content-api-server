@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uk.co.caeldev.content.api.features.content.ContentResource;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
 
 import static org.springframework.http.HttpStatus.*;
@@ -89,10 +88,11 @@ public class PublisherController {
 
         final Publisher publisherToBeUpdated = publisherResourceAssembler.toDomain(publisherResource, publisherSaved);
 
-        publisherService.update(publisherToBeUpdated);
+        final Publisher result = publisherService.update(publisherToBeUpdated);
 
         return ResponseEntityBuilder
                 .<PublisherResource>responseEntityBuilder()
+                .entity(publisherResourceAssembler.toResource(result))
                 .statusCode(OK)
                 .build();
     }

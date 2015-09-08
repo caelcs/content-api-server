@@ -50,9 +50,4 @@ public class PublisherRepositoryImpl implements PublisherRepositoryBase {
 
         return mongoTemplate.findAndModify(query, update, new FindAndModifyOptions().returnNew(true), Publisher.class);
     }
-
-    @Override
-    public Publisher update(Publisher publisher) {
-        return null;
-    }
 }

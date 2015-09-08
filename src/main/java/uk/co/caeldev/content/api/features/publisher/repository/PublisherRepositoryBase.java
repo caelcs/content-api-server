@@ -12,6 +12,4 @@ public interface PublisherRepositoryBase {
     Publisher findByUsername(String username);
 
     Publisher updateStatus(String publisherUUID, Status status);
-
-    Publisher update(Publisher publisher);
 }
