@@ -1,5 +1,6 @@
 package uk.co.caeldev.content.api.features.publisher.controller;
 
+import com.google.common.collect.FluentIterable;
 import com.jayway.restassured.response.Response;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -14,12 +15,16 @@ import uk.co.caeldev.content.api.features.publisher.PublisherResource;
 import uk.co.caeldev.content.api.features.publisher.Status;
 import uk.co.caeldev.content.api.features.publisher.repository.PublisherRepository;
 
+import java.util.List;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.jayway.restassured.RestAssured.given;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.joda.time.LocalDateTime.now;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
@@ -109,5 +114,46 @@ public class PublisherSteps extends BaseControllerConfiguration {
     public void the_Publisher_Delete_response_is_status_code(int expectedStatusCode) throws Throwable {
         verify(getRequestedFor(urlMatching("/sso/user")));
         assertThat(statusCode).isEqualTo(expectedStatusCode);
+    }
+
+    @Given("^an existing group of publishers$")
+    public void an_existing_group_of_publishers(List<Publisher> publishers) throws Throwable {
+        for (Publisher publisher : publishers) {
+            publisher.setCreationTime(now());
+        }
+        publisherRepository.save(publishers);
+    }
+
+    @When("^update publisher by username (.+) and publisherUUID (.+) with the new status (.+)$")
+    public void update_publisher_by_username_username_and_publisherUUID_publisherUUID_with_the_new_status_new_status(String username, String publisherUUID, Status status) throws Throwable {
+        publisherResourceToBePersist = publisherResourceBuilder().username(username).status(status).uuid(publisherUUID).build();
+        final Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
+                .body(publisherResourceToBePersist)
+                .contentType(APPLICATION_JSON_VALUE)
+                .put(String.format("/publishers/%s", publisherUUID));
+
+        statusCode = response.then()
+                .extract().statusCode();
+
+        responseBody = null;
+
+        if (statusCode == OK.value()) {
+            responseBody = response.then()
+                    .extract().body().as(PublisherResource.class);
+        }
+    }
+
+    @Then("^the publisher update response is (.+) and new status is (.+)$")
+    public void the_publisher_update_response_is_status_code_and_new_status_is_new_status(int statusCode, Status status) throws Throwable {
+        verify(getRequestedFor(urlMatching("/sso/user")));
+        assertThat(statusCode).isEqualTo(statusCode);
+        if (statusCode == OK.value()) {
+            assertThat(responseBody.getStatus()).isEqualTo(status);
+            assertThat(responseBody.getPublisherUUID()).isEqualTo(publisherResourceToBePersist.getPublisherUUID());
+            assertThat(responseBody.getUsername()).isEqualTo(publisherResourceToBePersist.getUsername());
+            assertThat(responseBody.getCreationTime()).isNotNull();
+        }
     }
 }

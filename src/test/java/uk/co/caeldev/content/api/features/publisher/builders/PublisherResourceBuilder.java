@@ -43,6 +43,11 @@ public class PublisherResourceBuilder {
         return this;
     }
 
+    public PublisherResourceBuilder status(Status status) {
+        this.status = status;
+        return this;
+    }
+
     public PublisherResource build() {
         return new PublisherResource(publisherUUID, username, creationTime, status);
     }
