@@ -29,6 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
 import static uk.co.caeldev.spring.mvc.ETagBuilder.eTagBuilder;
+import static uk.org.fyodor.generators.RDG.string;
 
 public class PublisherSteps extends BaseControllerConfiguration {
 
@@ -162,5 +163,29 @@ public class PublisherSteps extends BaseControllerConfiguration {
             assertThat(responseBody.getUsername()).isEqualTo(publisherResourceToBePersist.getUsername());
             assertThat(responseBody.getCreationTime()).isNotNull();
         }
+    }
+
+    @When("^update publisher using with wrong ETag by username (.+) and publisherUUID (.+) with the new status (.+)$")
+    public void update_publisher_using_with_wrong_ETag_by_username_username_and_publisherUUID_publisherUUID_with_the_new_status_new_status(String username, String publisherUUID, Status status) throws Throwable {
+        final String eTag = string().next();
+
+        final PublisherResource publisherResource = publisherResourceBuilder().build();
+
+        final Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
+                .header(IF_MATCH, eTag)
+                .body(publisherResource)
+                .contentType(APPLICATION_JSON_VALUE)
+                .put(String.format("/publishers/%s", publisherUUID));
+
+        statusCode = response.then()
+                .extract().statusCode();
+    }
+
+    @Then("^the publisher update response status is (.+)$")
+    public void the_publisher_update_response_status_is_status_code(int statusCode) throws Throwable {
+        verify(getRequestedFor(urlMatching("/sso/user")));
+        assertThat(statusCode).isEqualTo(statusCode);
     }
 }
