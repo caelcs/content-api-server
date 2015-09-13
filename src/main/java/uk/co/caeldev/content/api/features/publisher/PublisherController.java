@@ -98,4 +98,21 @@ public class PublisherController {
                 .statusCode(OK)
                 .build();
     }
+
+    @RequestMapping(value = "/publishers/{publisherUUID}",
+            method = RequestMethod.GET,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<PublisherResource> get(@PathVariable String publisherUUID) {
+        LOGGER.info("get publisher");
+
+        final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID);
+
+        return ResponseEntityBuilder
+                .<PublisherResource>responseEntityBuilder()
+                .entity(publisherResourceAssembler.toResource(publisher))
+                .statusCode(OK)
+                .build();
+    }
 }

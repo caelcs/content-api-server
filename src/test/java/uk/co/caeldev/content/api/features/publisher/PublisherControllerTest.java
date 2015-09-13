@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
@@ -144,5 +145,26 @@ public class PublisherControllerTest {
         //Then
         assertThat(response.getBody().getStatus()).isEqualTo(publisherResource.getStatus());
         assertThat(response.getStatusCode()).isEqualTo(OK);
+    }
+
+    @Test
+    public void shouldGetPublisherByUUID() throws Exception {
+        //Given
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //And
+        final Publisher expectedPublisher = publisherBuilder().publisherUUID(publisherUUID).build();
+        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(expectedPublisher);
+
+        //And
+        given(publisherResourceAssembler.toResource(expectedPublisher))
+                .willReturn(publisherResourceBuilder().publisher(expectedPublisher).build());
+
+        //When
+        final ResponseEntity<PublisherResource> response = publisherController.get(publisherUUID);
+
+        //Then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
     }
 }
