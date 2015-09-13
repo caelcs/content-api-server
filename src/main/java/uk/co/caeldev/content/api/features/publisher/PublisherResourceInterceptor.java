@@ -5,13 +5,18 @@ import uk.co.caeldev.spring.mvc.ResourceInterceptor;
 public class PublisherResourceInterceptor extends ResourceInterceptor {
     private final PublisherService publisherService;
 
-    public PublisherResourceInterceptor(final PublisherService publisherService) {
+    private final PublisherResourceAssembler publisherResourceAssembler;
+
+    public PublisherResourceInterceptor(final PublisherService publisherService,
+                                        final PublisherResourceAssembler publisherResourceAssembler) {
         this.publisherService = publisherService;
+        this.publisherResourceAssembler = publisherResourceAssembler;
     }
 
     @Override
     protected String entityHashCodeByUUID(String uuid) {
-        return publisherService.getPublisherByUUID(uuid).toString();
+        final Publisher publisher = publisherService.getPublisherByUUID(uuid);
+        return String.valueOf(publisherResourceAssembler.toResource(publisher).hashCode());
     }
 
     @Override

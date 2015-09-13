@@ -4,14 +4,18 @@ import uk.co.caeldev.spring.mvc.ResourceInterceptor;
 
 public class ContentResourceInterceptor extends ResourceInterceptor {
     private final ContentService contentService;
+    private final ContentResourceAssembler contentResourceAssembler;
 
-    public ContentResourceInterceptor(final ContentService contentService) {
+    public ContentResourceInterceptor(final ContentService contentService,
+                                      final ContentResourceAssembler contentResourceAssembler) {
         this.contentService = contentService;
+        this.contentResourceAssembler = contentResourceAssembler;
     }
 
     @Override
     protected String entityHashCodeByUUID(String uuid) {
-        return contentService.findOneByUUID(uuid).toString();
+        final Content content = contentService.findOneByUUID(uuid);
+        return String.valueOf(contentResourceAssembler.toResource(content).hashCode());
     }
 
     @Override

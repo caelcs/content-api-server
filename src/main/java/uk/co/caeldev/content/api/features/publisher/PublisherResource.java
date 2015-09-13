@@ -2,6 +2,9 @@ package uk.co.caeldev.content.api.features.publisher;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.joda.time.LocalDateTime;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -37,5 +40,20 @@ public class PublisherResource extends ResourceSupport {
 
     public Status getStatus() {
         return status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
     }
 }

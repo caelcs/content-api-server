@@ -1,6 +1,5 @@
 package uk.co.caeldev.content.api.features.publisher.controller;
 
-import com.google.common.collect.FluentIterable;
 import com.jayway.restassured.response.Response;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -12,6 +11,7 @@ import uk.co.caeldev.content.api.features.BaseControllerConfiguration;
 import uk.co.caeldev.content.api.features.common.AuthenticationSteps;
 import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.PublisherResource;
+import uk.co.caeldev.content.api.features.publisher.PublisherResourceAssembler;
 import uk.co.caeldev.content.api.features.publisher.Status;
 import uk.co.caeldev.content.api.features.publisher.repository.PublisherRepository;
 
@@ -21,13 +21,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.jayway.restassured.RestAssured.given;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.joda.time.LocalDateTime.now;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.IF_MATCH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
+import static uk.co.caeldev.spring.mvc.ETagBuilder.eTagBuilder;
 
 public class PublisherSteps extends BaseControllerConfiguration {
 
@@ -118,19 +119,25 @@ public class PublisherSteps extends BaseControllerConfiguration {
 
     @Given("^an existing group of publishers$")
     public void an_existing_group_of_publishers(List<Publisher> publishers) throws Throwable {
-        for (Publisher publisher : publishers) {
-            publisher.setCreationTime(now());
-        }
         publisherRepository.save(publishers);
     }
 
     @When("^update publisher by username (.+) and publisherUUID (.+) with the new status (.+)$")
     public void update_publisher_by_username_username_and_publisherUUID_publisherUUID_with_the_new_status_new_status(String username, String publisherUUID, Status status) throws Throwable {
-        publisherResourceToBePersist = publisherResourceBuilder().username(username).status(status).uuid(publisherUUID).build();
+
+        final Publisher publisherToBeUpdate = publisherRepository.findByUsername(username);
+        publisherResourceToBePersist = new PublisherResourceAssembler().toResource(publisherToBeUpdate);
+
+        final String eTag = eTagBuilder().value(String.valueOf(publisherResourceToBePersist.hashCode())).build();
+
+        publisherToBeUpdate.setStatus(status);
+        final PublisherResource publisherResource = new PublisherResourceAssembler().toResource(publisherToBeUpdate);
+
         final Response response = given().port(port).basePath(basePath).log().all()
                 .when()
                 .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
-                .body(publisherResourceToBePersist)
+                .header(IF_MATCH, eTag)
+                .body(publisherResource)
                 .contentType(APPLICATION_JSON_VALUE)
                 .put(String.format("/publishers/%s", publisherUUID));
 

@@ -55,6 +55,6 @@ public class PublisherServiceImpl implements PublisherService {
     public Publisher update(Publisher publisherToBeUpdated) {
         final Publisher publisherUpdated = publisherRepository.updateStatus(publisherToBeUpdated.getPublisherUUID(), publisherToBeUpdated.getStatus());
         checkNotNull(publisherUpdated);
-        return publisherToBeUpdated;
+        return publisherUpdated;
     }
 }
