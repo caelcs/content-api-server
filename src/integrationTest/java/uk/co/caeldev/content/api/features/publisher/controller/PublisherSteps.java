@@ -1,7 +1,6 @@
 package uk.co.caeldev.content.api.features.publisher.controller;
 
 import com.jayway.restassured.response.Response;
-import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -212,11 +211,10 @@ public class PublisherSteps extends BaseControllerConfiguration {
     @Then("^the publisher get response is (.+)$")
     public void the_publisher_get_response_is_status_code(int statusCode) throws Throwable {
         verify(getRequestedFor(urlMatching("/sso/user")));
-        assertThat(statusCode).isEqualTo(statusCode);
-    }
+        assertThat(this.statusCode).isEqualTo(statusCode);
+        if (statusCode == OK.value()) {
+            assertThat(responseBody).isNotNull();
+        }
 
-    @And("^content is the expected$")
-    public void content_is_the_expected() throws Throwable {
-        assertThat(responseBody).isNotNull();
     }
 }

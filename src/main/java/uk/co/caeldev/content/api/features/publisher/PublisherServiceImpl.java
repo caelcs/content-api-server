@@ -6,6 +6,7 @@ import uk.co.caeldev.content.api.features.publisher.repository.PublisherReposito
 
 import java.util.UUID;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.joda.time.LocalDateTime.now;
 
@@ -27,7 +28,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public Publisher getPublisherByUUID(String publisherUUID) {
         final Publisher publisher = publisherRepository.findByUUID(publisherUUID);
-        checkNotNull(publisher);
+        checkArgument(publisher != null, "No publisher found");
         return publisher;
 
     }
