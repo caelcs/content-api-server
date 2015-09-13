@@ -26,7 +26,10 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public Publisher getPublisherByUUID(String publisherUUID) {
-        return publisherRepository.findByUUID(publisherUUID);
+        final Publisher publisher = publisherRepository.findByUUID(publisherUUID);
+        checkNotNull(publisher);
+        return publisher;
+
     }
 
     @Override

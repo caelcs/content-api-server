@@ -1,6 +1,7 @@
 package uk.co.caeldev.content.api.features.publisher.controller;
 
 import com.jayway.restassured.response.Response;
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -165,8 +166,8 @@ public class PublisherSteps extends BaseControllerConfiguration {
         }
     }
 
-    @When("^update publisher using with wrong ETag by username (.+) and publisherUUID (.+) with the new status (.+)$")
-    public void update_publisher_using_with_wrong_ETag_by_username_username_and_publisherUUID_publisherUUID_with_the_new_status_new_status(String username, String publisherUUID, Status status) throws Throwable {
+    @When("^update publisher using with wrong ETag by publisherUUID (.+)$")
+    public void update_publisher_using_with_wrong_ETag_by_publisherUUID_publisherUUID(String publisherUUID) throws Throwable {
         final String eTag = string().next();
 
         final PublisherResource publisherResource = publisherResourceBuilder().build();
@@ -187,5 +188,35 @@ public class PublisherSteps extends BaseControllerConfiguration {
     public void the_publisher_update_response_status_is_status_code(int statusCode) throws Throwable {
         verify(getRequestedFor(urlMatching("/sso/user")));
         assertThat(statusCode).isEqualTo(statusCode);
+    }
+
+    @When("^get a publisher by publisherUUID (.+)$")
+    public void get_a_publisher_by_publisherUUID_publisherUUID(String publisherUUID) throws Throwable {
+        final Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
+                .contentType(APPLICATION_JSON_VALUE)
+                .get(String.format("/publishers/%s", publisherUUID));
+
+        statusCode = response.then()
+                .extract().statusCode();
+
+        responseBody = null;
+
+        if (statusCode == OK.value()) {
+            responseBody = response.then()
+                    .extract().body().as(PublisherResource.class);
+        }
+    }
+
+    @Then("^the publisher get response is (.+)$")
+    public void the_publisher_get_response_is_status_code(int statusCode) throws Throwable {
+        verify(getRequestedFor(urlMatching("/sso/user")));
+        assertThat(statusCode).isEqualTo(statusCode);
+    }
+
+    @And("^content is the expected$")
+    public void content_is_the_expected() throws Throwable {
+        assertThat(responseBody).isNotNull();
     }
 }

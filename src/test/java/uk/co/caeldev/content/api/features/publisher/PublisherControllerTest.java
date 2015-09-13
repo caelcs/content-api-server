@@ -165,6 +165,11 @@ public class PublisherControllerTest {
 
         //Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
+        final PublisherResource body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.getPublisherUUID()).isEqualTo(expectedPublisher.getPublisherUUID());
+        assertThat(body.getStatus()).isEqualTo(expectedPublisher.getStatus());
+        assertThat(body.getCreationTime()).isEqualTo(expectedPublisher.getCreationTime());
+        assertThat(body.getUsername()).isEqualTo(expectedPublisher.getUsername());
     }
 }
