@@ -12,10 +12,11 @@ import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.PublisherService;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
 
+import java.util.Objects;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @EnableOAuth2Resource
@@ -42,7 +43,7 @@ public class ContentController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
     public ResponseEntity<ContentResource> publish(@PathVariable UUID publisherUUID,
-                                   @RequestBody ContentResource contentResource) {
+                                                   @RequestBody ContentResource contentResource) {
 
         LOGGER.info("Publishing content");
 
@@ -65,5 +66,36 @@ public class ContentController {
                 .statusCode(CREATED)
                 .entity(contentResourceAssembler.toResource(publishedContent))
                 .build();
+    }
+
+    @RequestMapping(value = "/publishers/{publisherUUID}/contents/{contentUUID}",
+            method = RequestMethod.GET,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
+    public ResponseEntity<ContentResource> getContent(@PathVariable String contentUUID,
+                                                      @PathVariable String publisherUUID) {
+        LOGGER.info("get content");
+
+        final Content content = contentService.findOneByUUID(contentUUID);
+        final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID);
+
+        checkNotNull(content, "No content with given UUID");
+        checkNotNull(publisher, "No publisher with given UUID");
+
+        if (!Objects.equals(content.getPublisherId(), publisher.getId())) {
+            LOGGER.warn("Content forbidden");
+            return ResponseEntityBuilder.
+                    <ContentResource>responseEntityBuilder()
+                    .statusCode(FORBIDDEN)
+                    .build();
+        }
+
+        return ResponseEntityBuilder.
+                <ContentResource>responseEntityBuilder()
+                .statusCode(OK)
+                .entity(contentResourceAssembler.toResource(content))
+                .build();
+
     }
 }

@@ -17,9 +17,13 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.OK;
+import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
+import static uk.co.caeldev.content.api.features.content.ContentBuilder.contentBuilder;
 import static uk.co.caeldev.content.api.features.content.builders.ContentResourceBuilder.contentResourceBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
-import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContentControllerTest {
@@ -59,7 +63,7 @@ public class ContentControllerTest {
         given(publisherService.getPublisherByUUID(publisherUUID.toString())).willReturn(expectedPublisher);
 
         //And
-        final Content expectedContent = ContentBuilder.contentBuilder().content(content).contentUUID(contentUUID).publisherId(publisherId).build();
+        final Content expectedContent = contentBuilder().content(content).contentUUID(contentUUID).publisherId(publisherId).build();
         given(contentService.publish(content, expectedPublisher.getId())).willReturn(expectedContent);
 
         //And
@@ -79,5 +83,128 @@ public class ContentControllerTest {
         });
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    public void shouldGetContentByUUID() throws Exception {
+        //Given
+        final String contentUUID = UUID.randomUUID().toString();
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //And
+        final Content expectedContent = contentBuilder()
+                .contentUUID(contentUUID)
+                .build();
+
+        given(contentService.findOneByUUID(contentUUID)).willReturn(expectedContent);
+
+        //And
+        final Publisher expectedPublisher = publisherBuilder()
+                .publisherUUID(publisherUUID)
+                .id(expectedContent.getPublisherId())
+                .build();
+
+        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(expectedPublisher);
+
+        //And
+        final ContentResource expectedContentResource = contentResourceBuilder()
+                .content(expectedContent.getContent())
+                .contentUUID(contentUUID)
+                .creationDate(expectedContent.getCreationDate())
+                .status(expectedContent.getStatus())
+                .build();
+
+        given(contentResourceAssembler.toResource(expectedContent)).willReturn(expectedContentResource);
+
+        //When
+        final ResponseEntity<ContentResource> response = contentController.getContent(contentUUID, publisherUUID);
+
+        //Then
+        assertThat(response.getStatusCode()).isEqualTo(OK);
+        assertThat(response.getBody()).isNotNull();
+    }
+
+    @Test
+    public void shouldNotGetContentWhenContentDoesNotBelongToPublisher() throws Exception {
+        //Given
+        final String contentUUID = UUID.randomUUID().toString();
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //And
+        final Content expectedContent = contentBuilder()
+                .contentUUID(contentUUID)
+                .build();
+
+        given(contentService.findOneByUUID(contentUUID)).willReturn(expectedContent);
+
+        //And
+        final Publisher expectedPublisher = publisherBuilder()
+                .publisherUUID(publisherUUID)
+                .build();
+
+        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(expectedPublisher);
+
+        //And
+        final ContentResource expectedContentResource = contentResourceBuilder()
+                .content(expectedContent.getContent())
+                .contentUUID(contentUUID)
+                .creationDate(expectedContent.getCreationDate())
+                .status(expectedContent.getStatus())
+                .build();
+
+        given(contentResourceAssembler.toResource(expectedContent)).willReturn(expectedContentResource);
+
+        //When
+        final ResponseEntity<ContentResource> response = contentController.getContent(contentUUID, publisherUUID);
+
+        //Then
+        assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
+        assertThat(response.getBody()).isNull();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldNotGetContentWhenContentDoesNotExist() throws Exception {
+        //Given
+        final String contentUUID = UUID.randomUUID().toString();
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //And
+        given(contentService.findOneByUUID(contentUUID)).willReturn(null);
+
+        //And
+        final Publisher expectedPublisher = publisherBuilder()
+                .publisherUUID(publisherUUID)
+                .build();
+
+        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(expectedPublisher);
+
+        //When
+        contentController.getContent(contentUUID, publisherUUID);
+
+        //Then
+        verifyZeroInteractions(contentResourceAssembler);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldNotGetContentWhenPublisherDoesNotExist() throws Exception {
+        //Given
+        final String contentUUID = UUID.randomUUID().toString();
+        final String publisherUUID = UUID.randomUUID().toString();
+
+        //And
+        final Content expectedContent = contentBuilder()
+                .contentUUID(contentUUID)
+                .build();
+
+        given(contentService.findOneByUUID(contentUUID)).willReturn(expectedContent);
+
+        //And
+        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(null);
+
+        //When
+        contentController.getContent(contentUUID, publisherUUID);
+
+        //Then
+        verifyZeroInteractions(contentResourceAssembler);
     }
 }
