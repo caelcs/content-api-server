@@ -70,15 +70,14 @@ public class ContentController {
 
     @RequestMapping(value = "/publishers/{publisherUUID}/contents/{contentUUID}",
             method = RequestMethod.GET,
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
-    public ResponseEntity<ContentResource> getContent(@PathVariable String contentUUID,
-                                                      @PathVariable String publisherUUID) {
+    public ResponseEntity<ContentResource> getContent(@PathVariable UUID publisherUUID,
+                                                      @PathVariable UUID contentUUID) {
         LOGGER.info("get content");
 
-        final Content content = contentService.findOneByUUID(contentUUID);
-        final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID);
+        final Content content = contentService.findOneByUUID(contentUUID.toString());
+        final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID.toString());
 
         checkNotNull(content, "No content with given UUID");
         checkNotNull(publisher, "No publisher with given UUID");

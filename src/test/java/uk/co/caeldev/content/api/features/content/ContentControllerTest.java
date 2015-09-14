@@ -88,28 +88,30 @@ public class ContentControllerTest {
     @Test
     public void shouldGetContentByUUID() throws Exception {
         //Given
-        final String contentUUID = UUID.randomUUID().toString();
-        final String publisherUUID = UUID.randomUUID().toString();
+        final UUID contentUUID = UUID.randomUUID();
+        final UUID publisherUUID = UUID.randomUUID();
+        final String contentUUIDStr = contentUUID.toString();
+        final String publisherUUIDStr = publisherUUID.toString();
 
         //And
         final Content expectedContent = contentBuilder()
-                .contentUUID(contentUUID)
+                .contentUUID(contentUUIDStr)
                 .build();
 
-        given(contentService.findOneByUUID(contentUUID)).willReturn(expectedContent);
+        given(contentService.findOneByUUID(contentUUIDStr)).willReturn(expectedContent);
 
         //And
         final Publisher expectedPublisher = publisherBuilder()
-                .publisherUUID(publisherUUID)
+                .publisherUUID(publisherUUIDStr)
                 .id(expectedContent.getPublisherId())
                 .build();
 
-        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(expectedPublisher);
+        given(publisherService.getPublisherByUUID(publisherUUIDStr)).willReturn(expectedPublisher);
 
         //And
         final ContentResource expectedContentResource = contentResourceBuilder()
                 .content(expectedContent.getContent())
-                .contentUUID(contentUUID)
+                .contentUUID(contentUUIDStr)
                 .creationDate(expectedContent.getCreationDate())
                 .status(expectedContent.getStatus())
                 .build();
@@ -117,7 +119,7 @@ public class ContentControllerTest {
         given(contentResourceAssembler.toResource(expectedContent)).willReturn(expectedContentResource);
 
         //When
-        final ResponseEntity<ContentResource> response = contentController.getContent(contentUUID, publisherUUID);
+        final ResponseEntity<ContentResource> response = contentController.getContent(publisherUUID, contentUUID);
 
         //Then
         assertThat(response.getStatusCode()).isEqualTo(OK);
@@ -127,27 +129,29 @@ public class ContentControllerTest {
     @Test
     public void shouldNotGetContentWhenContentDoesNotBelongToPublisher() throws Exception {
         //Given
-        final String contentUUID = UUID.randomUUID().toString();
-        final String publisherUUID = UUID.randomUUID().toString();
+        final UUID contentUUID = UUID.randomUUID();
+        final UUID publisherUUID = UUID.randomUUID();
+        final String contentUUIDStr = contentUUID.toString();
+        final String publisherUUIDStr = publisherUUID.toString();
 
         //And
         final Content expectedContent = contentBuilder()
-                .contentUUID(contentUUID)
+                .contentUUID(contentUUIDStr)
                 .build();
 
-        given(contentService.findOneByUUID(contentUUID)).willReturn(expectedContent);
+        given(contentService.findOneByUUID(contentUUIDStr)).willReturn(expectedContent);
 
         //And
         final Publisher expectedPublisher = publisherBuilder()
-                .publisherUUID(publisherUUID)
+                .publisherUUID(publisherUUIDStr)
                 .build();
 
-        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(expectedPublisher);
+        given(publisherService.getPublisherByUUID(publisherUUIDStr)).willReturn(expectedPublisher);
 
         //And
         final ContentResource expectedContentResource = contentResourceBuilder()
                 .content(expectedContent.getContent())
-                .contentUUID(contentUUID)
+                .contentUUID(contentUUIDStr)
                 .creationDate(expectedContent.getCreationDate())
                 .status(expectedContent.getStatus())
                 .build();
@@ -155,7 +159,7 @@ public class ContentControllerTest {
         given(contentResourceAssembler.toResource(expectedContent)).willReturn(expectedContentResource);
 
         //When
-        final ResponseEntity<ContentResource> response = contentController.getContent(contentUUID, publisherUUID);
+        final ResponseEntity<ContentResource> response = contentController.getContent(publisherUUID, contentUUID);
 
         //Then
         assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
@@ -165,21 +169,23 @@ public class ContentControllerTest {
     @Test(expected = NullPointerException.class)
     public void shouldNotGetContentWhenContentDoesNotExist() throws Exception {
         //Given
-        final String contentUUID = UUID.randomUUID().toString();
-        final String publisherUUID = UUID.randomUUID().toString();
+        final UUID contentUUID = UUID.randomUUID();
+        final UUID publisherUUID = UUID.randomUUID();
+        final String contentUUIDStr = contentUUID.toString();
+        final String publisherUUIDStr = publisherUUID.toString();
 
         //And
-        given(contentService.findOneByUUID(contentUUID)).willReturn(null);
+        given(contentService.findOneByUUID(contentUUIDStr)).willReturn(null);
 
         //And
         final Publisher expectedPublisher = publisherBuilder()
-                .publisherUUID(publisherUUID)
+                .publisherUUID(publisherUUIDStr)
                 .build();
 
-        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(expectedPublisher);
+        given(publisherService.getPublisherByUUID(publisherUUIDStr)).willReturn(expectedPublisher);
 
         //When
-        contentController.getContent(contentUUID, publisherUUID);
+        contentController.getContent(publisherUUID, contentUUID);
 
         //Then
         verifyZeroInteractions(contentResourceAssembler);
@@ -188,21 +194,23 @@ public class ContentControllerTest {
     @Test(expected = NullPointerException.class)
     public void shouldNotGetContentWhenPublisherDoesNotExist() throws Exception {
         //Given
-        final String contentUUID = UUID.randomUUID().toString();
-        final String publisherUUID = UUID.randomUUID().toString();
+        final UUID contentUUID = UUID.randomUUID();
+        final UUID publisherUUID = UUID.randomUUID();
+        final String contentUUIDStr = contentUUID.toString();
+        final String publisherUUIDStr = publisherUUID.toString();
 
         //And
         final Content expectedContent = contentBuilder()
-                .contentUUID(contentUUID)
+                .contentUUID(contentUUIDStr)
                 .build();
 
-        given(contentService.findOneByUUID(contentUUID)).willReturn(expectedContent);
+        given(contentService.findOneByUUID(contentUUIDStr)).willReturn(expectedContent);
 
         //And
-        given(publisherService.getPublisherByUUID(publisherUUID)).willReturn(null);
+        given(publisherService.getPublisherByUUID(publisherUUIDStr)).willReturn(null);
 
         //When
-        contentController.getContent(contentUUID, publisherUUID);
+        contentController.getContent(publisherUUID, contentUUID);
 
         //Then
         verifyZeroInteractions(contentResourceAssembler);
