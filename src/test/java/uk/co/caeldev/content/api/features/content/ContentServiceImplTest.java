@@ -6,6 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import uk.co.caeldev.content.api.features.common.PageBuilder;
 import uk.co.caeldev.content.api.features.content.repository.ContentRepository;
 
 import java.util.UUID;
@@ -80,5 +83,28 @@ public class ContentServiceImplTest {
 
         //Then
         assertThat(result).isNull();
+    }
+
+    @Test
+    public void shouldGetAllContentByContentStatusAndPublisherIdPaginated() throws Exception {
+        //Given
+        final String publisherId = UUID.randomUUID().toString();
+        final PageRequest pageable = new PageRequest(0, 1);
+        final ContentStatus contentStatus = ContentStatus.UNREAD;
+
+
+        //And
+        final Content expectedContent = ContentBuilder.contentBuilder().publisherId(publisherId).build();
+        final Page<Content> page = PageBuilder.<Content>pageBuilder().page(expectedContent).build();
+
+        given(contentRepository.findAllContentByStatusPublisherIdPaginated(contentStatus, publisherId, pageable)).willReturn(page);
+
+        //When
+        final Page<Content> result = contentService.findAllContentPaginatedBy(contentStatus, publisherId, pageable);
+
+        //Then
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(1);
+
     }
 }

@@ -2,6 +2,8 @@ package uk.co.caeldev.content.api.features.content;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import uk.co.caeldev.content.api.features.content.repository.ContentRepository;
 
@@ -38,5 +40,10 @@ public class ContentServiceImpl implements ContentService {
     public Content findOneByUUID(String uuid) {
         checkArgument(uuid != null && !uuid.isEmpty(), "UUID is null or empty.");
         return contentRepository.findOneByUUID(uuid);
+    }
+
+    @Override
+    public Page<Content> findAllContentPaginatedBy(ContentStatus contentStatus, String publisherId, Pageable pageable) {
+        return contentRepository.findAllContentByStatusPublisherIdPaginated(contentStatus, publisherId, pageable);
     }
 }

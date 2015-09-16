@@ -4,6 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,14 +31,17 @@ public class ContentController {
     private final ContentService contentService;
     private final PublisherService publisherService;
     private final ContentResourceAssembler contentResourceAssembler;
+    private final PagedResourcesAssembler pagedResourcesAssembler;
 
     @Autowired
     public ContentController(final ContentService contentService,
                              final PublisherService publisherService,
-                             final ContentResourceAssembler contentResourceAssembler) {
+                             final ContentResourceAssembler contentResourceAssembler,
+                             final PagedResourcesAssembler pagedResourcesAssembler) {
         this.contentService = contentService;
         this.publisherService = publisherService;
         this.contentResourceAssembler = contentResourceAssembler;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @RequestMapping(value = "/publishers/{publisherUUID}/contents",
@@ -96,5 +103,27 @@ public class ContentController {
                 .entity(contentResourceAssembler.toResource(content))
                 .build();
 
+    }
+
+    @RequestMapping(value = "/publishers/{publisherUUID}/contents",
+            method = RequestMethod.GET,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
+    public ResponseEntity<PagedResources<ContentResource>> getContentPaginatedBy(@RequestParam ContentStatus contentStatus,
+                                                                                 @PathVariable UUID publisherUUID,
+                                                                                 final Pageable pageable) {
+
+        LOGGER.info("get all content paginated by Content Status and Publisher UUID");
+
+        final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID.toString());
+
+        final Page<Content> pageContent = contentService.findAllContentPaginatedBy(contentStatus, publisher.getId(), pageable);
+
+        return ResponseEntityBuilder.
+                <PagedResources<ContentResource>>responseEntityBuilder()
+                .statusCode(OK)
+                .entity(pagedResourcesAssembler.toResource(pageContent, contentResourceAssembler))
+                .build();
     }
 }
