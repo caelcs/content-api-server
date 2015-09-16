@@ -37,9 +37,11 @@ Feature: Content Repository
       | 86e0a3f8-9871-41ab-a30a-a3c57f6032a1  | f5c40191-22ec-4d34-9d8d-2cb9732635fc  | http://google.com | UNREAD |
       | d244fce6-54f6-47e4-8eae-12150ae1791e  | f5c40191-22ec-4d34-9d8d-2cb9732635fc  | http://google.com | UNREAD |
 
-    When find all content by status <status> paginated with page size <page_size>
-    Then the number of pages is <expected_number_pages>, each page with size of <page_size>
+    When find all content by status <status> paginated with page size <page_size> and publisherId <publisher_id>
+    Then the number of pages is <expected_number_pages>
+    And each page has size of <page_size>
+    And publisher id is <publisher_id> for all content
 
     Examples:
-      | page_size | status  | expected_number_pages |
-      | 1         | UNREAD  | 3                     |
+      | page_size | status  | expected_number_pages | publisher_id                         |
+      | 1         | UNREAD  | 3                     | f5c40191-22ec-4d34-9d8d-2cb9732635fc |

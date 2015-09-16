@@ -74,9 +74,9 @@ public class ContentRepositorySteps extends BaseRepositoryConfiguration {
         }
     }
 
-    @When("^find all content by status (.+) paginated with page size (.+)$")
-    public void find_all_content_by_status_status_paginated_with_page_size_page_size(ContentStatus status, int pageSize) throws Throwable {
-        final Page<Content> page0 = contentRepository.findAllContentByStatusPaginated(status, new PageRequest(0, pageSize));
+    @When("^find all content by status (.+) paginated with page size (.+) and publisherId (.+)$")
+    public void find_all_content_by_status_status_paginated_with_page_size_page_size_and_publisherId_publisher_id(ContentStatus status, int pageSize, String publisherId) throws Throwable {
+        final Page<Content> page0 = contentRepository.findAllContentByStatusPublisherIdPaginated(status, publisherId, new PageRequest(0, pageSize));
         resultsPaginated = Lists.<Page<Content>>newArrayList(page0);
 
         final int totalPages = page0.getTotalPages();
@@ -84,17 +84,31 @@ public class ContentRepositorySteps extends BaseRepositoryConfiguration {
         if (totalPages == 1) {return;}
 
         for (int page = 1; page < totalPages; page++) {
-            final Page<Content> resultPage = contentRepository.findAllContentByStatusPaginated(status, new PageRequest(page, pageSize));
+            final Page<Content> resultPage = contentRepository.findAllContentByStatusPublisherIdPaginated(status, publisherId, new PageRequest(page, pageSize));
             resultsPaginated.add(resultPage);
         }
     }
 
-    @Then("^the number of pages is (.+), each page with size of (.+)$")
-    public void the_number_of_pages_is_expected_number_pages_each_page_with_size_of_page_size(int expectedNumberPages, int pageSize) throws Throwable {
+    @Then("^the number of pages is (.+)$")
+    public void the_number_of_pages_is_expected_number_pages(int expectedNumberPages) throws Throwable {
         assertThat(resultsPaginated).hasSize(expectedNumberPages);
+    }
 
+    @And("^each page has size of (.+)$")
+    public void each_page_has_size_of_page_size(int pageSize) throws Throwable {
         for (Page<Content> contents : resultsPaginated) {
             assertThat(contents).hasSize(pageSize);
         }
     }
+
+    @And("^publisher id is (.+) for all content$")
+    public void publisher_id_is_publisher_id_for_all_content(String publisherId) throws Throwable {
+        for (Page<Content> contents : resultsPaginated) {
+            for (Content contentResult : contents.getContent()) {
+                assertThat(contentResult.getPublisherId()).isEqualTo(publisherId);
+            }
+        }
+    }
+
+
 }

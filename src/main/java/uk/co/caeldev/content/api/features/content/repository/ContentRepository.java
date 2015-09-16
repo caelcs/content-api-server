@@ -9,7 +9,7 @@ import uk.co.caeldev.content.api.features.content.ContentStatus;
 
 public interface ContentRepository extends MongoRepository<Content, String>, ContentRepositoryBase {
 
-    @Query(value = "{ 'status' : ?0 }")
-    Page<Content> findAllContentByStatusPaginated(ContentStatus status, Pageable pageable);
+    @Query(value = "{ 'status' : ?0, 'publisherId': ?1}")
+    Page<Content> findAllContentByStatusPublisherIdPaginated(ContentStatus status, String publisherId, Pageable pageable);
 
 }
