@@ -1,15 +1,18 @@
 package uk.co.caeldev.content.api.features.content.repository;
 
-import cucumber.api.PendingException;
+import com.google.common.collect.Lists;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import uk.co.caeldev.content.api.features.BaseRepositoryConfiguration;
 import uk.co.caeldev.content.api.features.content.Content;
 import uk.co.caeldev.content.api.features.content.ContentBuilder;
+import uk.co.caeldev.content.api.features.content.ContentStatus;
 
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class ContentRepositorySteps extends BaseRepositoryConfiguration {
 
     private Content content;
     private Content result;
+    private List<Page<Content>> resultsPaginated;
 
     @Autowired
     public ContentRepositorySteps(final ContentRepository contentRepository) {
@@ -67,6 +71,30 @@ public class ContentRepositorySteps extends BaseRepositoryConfiguration {
         } else {
             assertThat(result).isNotNull();
             assertThat(result.getContentUUID()).isEqualTo(expectedContentUUID);
+        }
+    }
+
+    @When("^find all content by status (.+) paginated with page size (.+)$")
+    public void find_all_content_by_status_status_paginated_with_page_size_page_size(ContentStatus status, int pageSize) throws Throwable {
+        final Page<Content> page0 = contentRepository.findAllContentByStatusPaginated(status, new PageRequest(0, pageSize));
+        resultsPaginated = Lists.<Page<Content>>newArrayList(page0);
+
+        final int totalPages = page0.getTotalPages();
+
+        if (totalPages == 1) {return;}
+
+        for (int page = 1; page < totalPages; page++) {
+            final Page<Content> resultPage = contentRepository.findAllContentByStatusPaginated(status, new PageRequest(page, pageSize));
+            resultsPaginated.add(resultPage);
+        }
+    }
+
+    @Then("^the number of pages is (.+), each page with size of (.+)$")
+    public void the_number_of_pages_is_expected_number_pages_each_page_with_size_of_page_size(int expectedNumberPages, int pageSize) throws Throwable {
+        assertThat(resultsPaginated).hasSize(expectedNumberPages);
+
+        for (Page<Content> contents : resultsPaginated) {
+            assertThat(contents).hasSize(pageSize);
         }
     }
 }
