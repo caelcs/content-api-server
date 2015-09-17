@@ -24,6 +24,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.hateoas.PagedResources.PageMetadata;
+import static org.springframework.hateoas.PagedResources.wrap;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
@@ -132,7 +134,13 @@ public class ContentControllerTest {
 
         //Then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(response.getBody()).isNotNull();
+
+        final ContentResource body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.getContent()).isEqualTo(expectedContent.getContent());
+        assertThat(body.getContentUUID()).isEqualTo(expectedContent.getContentUUID());
+        assertThat(body.getCreationDate()).isEqualTo(expectedContent.getCreationDate());
+        assertThat(body.getContentStatus()).isEqualTo(expectedContent.getStatus());
     }
 
     @Test
@@ -175,7 +183,7 @@ public class ContentControllerTest {
         given(contentResourceAssembler.toResource(expectedContent)).willReturn(expectedContentResource);
 
         //And
-        given(pagedResourcesAssembler.toResource(contentPage, contentResourceAssembler)).willReturn(PagedResources.wrap(Lists.newArrayList(expectedContent), new PagedResources.PageMetadata(1, 0, 1, 1)));
+        given(pagedResourcesAssembler.toResource(contentPage, contentResourceAssembler)).willReturn(wrap(Lists.newArrayList(expectedContent), new PageMetadata(1, 0, 1, 1)));
 
         //When
         final ResponseEntity<PagedResources<ContentResource>> response = contentController.getContentPaginatedBy(contentStatus, publisherUUID, pageable);
@@ -183,6 +191,9 @@ public class ContentControllerTest {
         //Then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getMetadata().getTotalElements()).isEqualTo(1);
+        assertThat(response.getBody().getMetadata().getTotalPages()).isEqualTo(1);
+        assertThat(response.getBody().getContent()).hasSize(1);
     }
 
     @Test
