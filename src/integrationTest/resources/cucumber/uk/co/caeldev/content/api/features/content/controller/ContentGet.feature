@@ -35,3 +35,21 @@ Feature: Content
     Examples:
       | credential_username | username | publisher_uuid                       | publisher_id                         | status | page_size | number_of_pages |
       | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | UNREAD | 1         | 3               |
+
+  Scenario Outline: As a consumer, I should be to get all content by publisher UUID and status paginated that belongs to the publisher logged in.
+    Given a publisher with id <publisher_id>, username <username> and publisher uuid <publisher_uuid>
+    And credential details have been provided using username <credential_username>
+    And the following persisted content associated to a publisher
+      | contentUUID                          | publisherId                          | content           | status |
+      | d72b4c53-8993-4a5f-acc2-629456e81c6d | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | UNREAD |
+      | 86e0a3f8-9871-41ab-a30a-a3c57f6032a1 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | UNREAD |
+      | d244fce6-54f6-47e4-8eae-12150ae1791e | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | UNREAD |
+      | 4e729ad7-0327-4de3-9472-98893b5bc855 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | READ   |
+      | f1be484a-a8b6-46ad-a808-a7d995571abb | 565c7058-0556-4562-a25c-6a0375dbe826 | http://google.com | UNREAD |
+
+    When get first page of page size <page_size> by status <status> and publisher UUID <publisher_uuid_requested>
+    Then the response should be empty and status code 403
+
+    Examples:
+      | credential_username | username | publisher_uuid                       | publisher_id                         | status | page_size | publisher_uuid_requested             |
+      | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | UNREAD | 4         | 6ee1193c-b54e-4d22-b500-944fb8287d00 |

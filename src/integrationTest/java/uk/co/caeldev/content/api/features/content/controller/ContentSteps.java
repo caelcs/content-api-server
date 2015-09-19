@@ -193,4 +193,26 @@ public class ContentSteps extends BaseControllerConfiguration {
             assertThat(paginatedResult).hasSize(pageSize);
         }
     }
+
+    @When("^get first page of page size (.+) by status (.+) and publisher UUID (.+)$")
+    public void get_first_page_of_page_size_page_size_by_status_status_and_publisher_UUID_publisher_uuid(int pageSize, ContentStatus contentStatus, String publisherUUID) throws Throwable {
+        Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("page", 0)
+                .param("size", pageSize)
+                .param("sort", "content,asc")
+                .param("contentStatus", contentStatus)
+                .get(format("/publishers/%s/contents", publisherUUID));
+
+        statusCode = response.then()
+                .extract().statusCode();
+    }
+
+    @Then("^the response should be empty and status code (.+)$")
+    public void the_response_should_be_empty_and_status_code(int expectedStatusCode) throws Throwable {
+        verify(getRequestedFor(urlMatching("/sso/user")));
+        assertThat(this.statusCode).isEqualTo(expectedStatusCode);
+    }
 }
