@@ -9,7 +9,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import uk.co.caeldev.content.api.features.BaseControllerConfiguration;
 import uk.co.caeldev.content.api.features.common.AuthenticationSteps;
@@ -165,11 +164,11 @@ public class ContentSteps extends BaseControllerConfiguration {
                     .get(format("/publishers/%s/contents", publisherUUID));
 
             final List<Map> contentResources = response.then().extract().body().jsonPath().getList("_embedded.contentResources");
-            final List<ContentResource> resourcesMapped = from(contentResources).transform(toContentResource()).toList();
-
             final Map<String, Integer> page = response.then().extract().body().jsonPath().getMap("page");
-            final PagedResources.PageMetadata pageMetadata = new PagedResources.PageMetadata(page.get("size"), page.get("number"), page.get("totalElements"), page.get("totalPages"));
-            paginatedResults.add(new PagedResources<>(resourcesMapped, pageMetadata, Lists.<Link>newArrayList()));
+
+            final List<ContentResource> resourcesMapped = from(contentResources).transform(toContentResource()).toList();
+            final PagedResources<ContentResource> pagedResources = PagedResourcesBuilder.<ContentResource>pagedResourcesBuilder().content(resourcesMapped).page(page).build();
+            paginatedResults.add(pagedResources);
         }
     }
 
