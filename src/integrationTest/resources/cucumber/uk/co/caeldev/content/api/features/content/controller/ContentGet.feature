@@ -25,6 +25,9 @@ Feature: Content
       | d72b4c53-8993-4a5f-acc2-629456e81c6d | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | UNREAD |
       | 86e0a3f8-9871-41ab-a30a-a3c57f6032a1 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | UNREAD |
       | d244fce6-54f6-47e4-8eae-12150ae1791e | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | UNREAD |
+      | 4e729ad7-0327-4de3-9472-98893b5bc855 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | READ   |
+      | f1be484a-a8b6-46ad-a808-a7d995571abb | 565c7058-0556-4562-a25c-6a0375dbe826 | http://google.com | UNREAD |
+
     When get <number_of_pages> pages of size <page_size> by status <status> and publisher UUID <publisher_uuid>
     Then the number of pages is <number_of_pages>
     And all pages contains <page_size> content
