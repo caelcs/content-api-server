@@ -107,7 +107,6 @@ public class ContentController {
 
     @RequestMapping(value = "/publishers/{publisherUUID}/contents",
             method = RequestMethod.GET,
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
     public ResponseEntity<PagedResources<ContentResource>> getContentPaginatedBy(@RequestParam ContentStatus contentStatus,
