@@ -7,8 +7,11 @@ import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
+
+import java.security.Principal;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -108,6 +111,24 @@ public class PublisherController {
         LOGGER.info("get publisher");
 
         final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID);
+
+        return ResponseEntityBuilder
+                .<PublisherResource>responseEntityBuilder()
+                .entity(publisherResourceAssembler.toResource(publisher))
+                .statusCode(OK)
+                .build();
+    }
+
+    @RequestMapping(value = "/publisher",
+            method = RequestMethod.GET,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<PublisherResource> currentPublisherFromToken(@AuthenticationPrincipal Principal principal) {
+        LOGGER.info("get publisher from token");
+        final String username = principal.getName();
+
+        final Publisher publisher = publisherService.getPublisherByUsername(username);
 
         return ResponseEntityBuilder
                 .<PublisherResource>responseEntityBuilder()

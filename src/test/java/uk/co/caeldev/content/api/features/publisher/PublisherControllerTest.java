@@ -7,7 +7,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 
+import java.security.Principal;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -167,6 +169,34 @@ public class PublisherControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         final PublisherResource body = response.getBody();
         assertThat(body).isNotNull();
+        assertThat(body.getPublisherUUID()).isEqualTo(expectedPublisher.getPublisherUUID());
+        assertThat(body.getStatus()).isEqualTo(expectedPublisher.getStatus());
+        assertThat(body.getCreationTime()).isEqualTo(expectedPublisher.getCreationTime());
+        assertThat(body.getUsername()).isEqualTo(expectedPublisher.getUsername());
+    }
+
+    @Test
+    public void shouldGetPublisherAssociatedToToken() throws Exception {
+        //Given
+        String username = string().next();
+        Principal principal = new TestingAuthenticationToken(username, string().next());
+
+        //And
+        final Publisher expectedPublisher = publisherBuilder().username(username).build();
+        given(publisherService.getPublisherByUsername(username))
+                .willReturn(expectedPublisher);
+
+        //And
+        given(publisherResourceAssembler.toResource(expectedPublisher))
+                .willReturn(publisherResourceBuilder().publisher(expectedPublisher).build());
+
+        //When
+        final ResponseEntity<PublisherResource> response = publisherController.currentPublisherFromToken(principal);
+
+        //Then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        final PublisherResource body = response.getBody();
         assertThat(body.getPublisherUUID()).isEqualTo(expectedPublisher.getPublisherUUID());
         assertThat(body.getStatus()).isEqualTo(expectedPublisher.getStatus());
         assertThat(body.getCreationTime()).isEqualTo(expectedPublisher.getCreationTime());

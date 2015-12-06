@@ -217,4 +217,23 @@ public class PublisherSteps extends BaseControllerConfiguration {
         }
 
     }
+
+    @When("^get a publisher from token$")
+    public void getAPublisherFromToken() throws Throwable {
+        final Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
+                .contentType(APPLICATION_JSON_VALUE)
+                .get("/publisher");
+
+        statusCode = response.then()
+                .extract().statusCode();
+
+        responseBody = null;
+
+        if (statusCode == OK.value()) {
+            responseBody = response.then()
+                    .extract().body().as(PublisherResource.class);
+        }
+    }
 }
