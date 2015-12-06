@@ -224,7 +224,7 @@ public class PublisherSteps extends BaseControllerConfiguration {
                 .when()
                 .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
                 .contentType(APPLICATION_JSON_VALUE)
-                .get("/publisher");
+                .get("/publisher/current");
 
         statusCode = response.then()
                 .extract().statusCode();

@@ -119,7 +119,7 @@ public class PublisherController {
                 .build();
     }
 
-    @RequestMapping(value = "/publisher",
+    @RequestMapping(value = "/publisher/current",
             method = RequestMethod.GET,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
