@@ -53,3 +53,16 @@ Feature: Content
     Examples:
       | credential_username | username | publisher_uuid                       | publisher_id                         | status | page_size | publisher_uuid_requested             |
       | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | UNREAD | 4         | 6ee1193c-b54e-4d22-b500-944fb8287d00 |
+
+  Scenario Outline: As a consumer, I should be able to get content by UUID that belong to a particular publisher given CORS support.
+    Given a publisher with id <publisher_id>, username <username> and publisher uuid <publisher_uuid>
+    And credential details have been provided using username <credential_username>
+    And the following persisted content associated to a publisher
+      | contentUUID                          | publisherId                          | content           | status |
+      | d72b4c53-8993-4a5f-acc2-629456e81c6d | f5c40191-22ec-4d34-9d8d-2cb9732635fc | http://google.com | UNREAD |
+    When get a content with CORS headers by UUID <content_uuid> and publisher UUID <publisher_uuid>
+    Then the content get response contains CORS headers and status code is <status_code>
+
+    Examples:
+      | status_code | credential_username | username | publisher_uuid                       | publisher_id                         | content_uuid                         |
+      | 200         | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | d72b4c53-8993-4a5f-acc2-629456e81c6d |

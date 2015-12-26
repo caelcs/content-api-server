@@ -12,6 +12,7 @@ import uk.co.caeldev.content.api.features.content.ContentService;
 import uk.co.caeldev.content.api.features.publisher.PublisherResourceAssembler;
 import uk.co.caeldev.content.api.features.publisher.PublisherResourceInterceptor;
 import uk.co.caeldev.content.api.features.publisher.PublisherService;
+import uk.co.caeldev.content.api.features.security.CORSInterceptor;
 
 @Configuration
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
@@ -28,8 +29,10 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new ContentResourceInterceptor(contentService, contentResourceAssembler())).addPathPatterns("/publisher/**/contents", "/publisher/**/contents/**");
         registry.addInterceptor(new PublisherResourceInterceptor(publisherService, publisherResourceAssembler())).addPathPatterns("/publishers", "/publishers/**");
+        registry.addInterceptor(new CORSInterceptor());
         super.addInterceptors(registry);
     }
+
 
     @Bean
     public PublisherResourceAssembler publisherResourceAssembler() {

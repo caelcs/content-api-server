@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(classes = ApplicationTestConfiguration.class, loader = SpringApplicationContextLoader.class)
-@WebIntegrationTest("server.port:0")
+@WebIntegrationTest("server.port:8888")
 @ActiveProfiles("test")
 public class BaseControllerConfiguration {
 

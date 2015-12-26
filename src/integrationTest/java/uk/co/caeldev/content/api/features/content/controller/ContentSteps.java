@@ -10,6 +10,7 @@ import cucumber.api.java.en.When;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.http.HttpHeaders;
 import uk.co.caeldev.content.api.features.BaseControllerConfiguration;
 import uk.co.caeldev.content.api.features.common.AuthenticationSteps;
 import uk.co.caeldev.content.api.features.content.Content;
@@ -47,6 +48,7 @@ public class ContentSteps extends BaseControllerConfiguration {
     private ContentResource responseBody;
     private int statusCode;
     private List<PagedResources<ContentResource>> paginatedResults = Lists.newArrayList();
+    private String accessControlAllowOrigin;
 
     @Autowired
     public ContentSteps(final PublisherRepository publisherRepository,
@@ -177,7 +179,7 @@ public class ContentSteps extends BaseControllerConfiguration {
             @Nullable
             @Override
             public ContentResource apply(Map input) {
-                return new ContentResource((String)input.get("contentUUID"), (String)input.get("content"), ContentStatus.valueOf((String) input.get("contentStatus")), null);
+                return new ContentResource((String) input.get("contentUUID"), (String) input.get("content"), ContentStatus.valueOf((String) input.get("contentStatus")), null);
             }
         };
     }
@@ -214,5 +216,34 @@ public class ContentSteps extends BaseControllerConfiguration {
     public void the_response_should_be_empty_and_status_code(int expectedStatusCode) throws Throwable {
         verify(getRequestedFor(urlMatching("/sso/user")));
         assertThat(this.statusCode).isEqualTo(expectedStatusCode);
+    }
+
+    @When("^get a content with CORS headers by UUID (.+) and publisher UUID (.+)$")
+    public void getAContentWithCORSHeadersByUUIDContent_uuidAndPublisherUUIDPublisher_uuid(String contentUUID, String publisherUUID) throws Throwable {
+        Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
+                .header(HttpHeaders.ORIGIN, "http://localhost:" + port)
+                .contentType(APPLICATION_JSON_VALUE)
+                .get(format("/publishers/%s/contents/%s", publisherUUID, contentUUID));
+
+        statusCode = response.then()
+                .extract().statusCode();
+
+        accessControlAllowOrigin = response.then().extract().header(com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN);
+
+        responseBody = null;
+
+        if (statusCode == OK.value()) {
+            responseBody = response.then()
+                    .extract().body().as(ContentResource.class);
+        }
+    }
+
+    @Then("^the content get response contains CORS headers and status code is (.+)$")
+    public void theContentGetResponseContainsCORSHeadersAndStatusCodeIsStatus_code(int expectedStatusCode) throws Throwable {
+        verify(getRequestedFor(urlMatching("/sso/user")));
+        assertThat(this.statusCode).isEqualTo(expectedStatusCode);
+        assertThat(this.accessControlAllowOrigin).isEqualTo("http://localhost:" + port);
     }
 }
