@@ -27,24 +27,25 @@ public class CORSFilter implements Filter {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String originHeader = httpServletRequest.getHeader("Origin");
 
-        if(isValid(originHeader)) {
-            LOGGER.info("Adding Header Allow Origin: " + originHeader);
-            httpServletResponse.addHeader("Access-Control-Allow-Origin", originHeader);
-        }
+        if (httpServletRequest.getMethod().equals(HttpMethod.OPTIONS.name())) {
 
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-        httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
+            if(isValid(originHeader)) {
+                LOGGER.info("Adding Header Allow Origin: " + originHeader);
+                httpServletResponse.addHeader("Access-Control-Allow-Origin", originHeader);
+            }
 
+            httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+            httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
+            httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
 
-        if (!httpServletRequest.getMethod().equals(HttpMethod.OPTIONS.name())) {
-            LOGGER.info("Continue filter processing");
-            chain.doFilter(request, response);
-        } else {
             LOGGER.info("Return OK status for OPTIONS method requests");
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+
+        } else {
+            LOGGER.info("Continue filter processing");
+            chain.doFilter(request, response);
         }
+
     }
 
     @Override

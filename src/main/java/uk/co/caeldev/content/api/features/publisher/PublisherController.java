@@ -42,7 +42,7 @@ public class PublisherController {
         String username = publisherResource.getUsername();
 
         if (username == null || username.isEmpty()) {
-            LOGGER.warn("Publisher userˆname is not Invalid");
+            LOGGER.warn("Publisher username is not Invalid");
             return ResponseEntityBuilder
                     .<PublisherResource>responseEntityBuilder()
                     .statusCode(BAD_REQUEST)
@@ -121,7 +121,6 @@ public class PublisherController {
 
     @RequestMapping(value = "/publisher/current",
             method = RequestMethod.GET,
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PublisherResource> currentPublisherFromToken(@AuthenticationPrincipal Principal principal) {
