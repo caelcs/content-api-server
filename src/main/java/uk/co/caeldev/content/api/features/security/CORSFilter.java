@@ -38,7 +38,7 @@ public class CORSFilter implements Filter {
         httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
 
 
-        if (!httpServletRequest.getMethod().equals(HttpMethod.OPTIONS)) {
+        if (!httpServletRequest.getMethod().equals(HttpMethod.OPTIONS.name())) {
             LOGGER.info("Continue filter processing");
             chain.doFilter(request, response);
         } else {
