@@ -202,4 +202,21 @@ public class PublisherControllerTest {
         assertThat(body.getCreationTime()).isEqualTo(expectedPublisher.getCreationTime());
         assertThat(body.getUsername()).isEqualTo(expectedPublisher.getUsername());
     }
+
+    @Test
+    public void shouldNotGetPublisherAssociatedToTokenWhenPublisherDoesNotExists() throws Exception {
+        //Given
+        String username = string().next();
+        Principal principal = new TestingAuthenticationToken(username, string().next());
+
+        //And
+        given(publisherService.getPublisherByUsername(username))
+                .willReturn(null);
+
+        //When
+        final ResponseEntity<PublisherResource> response = publisherController.currentPublisherFromToken(principal);
+
+        //Then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
 }

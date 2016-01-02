@@ -130,6 +130,13 @@ public class PublisherController {
 
         final Publisher publisher = publisherService.getPublisherByUsername(username);
 
+        if (publisher == null) {
+            return ResponseEntityBuilder
+                    .<PublisherResource>responseEntityBuilder()
+                    .statusCode(NO_CONTENT)
+                    .build();
+        }
+
         return ResponseEntityBuilder
                 .<PublisherResource>responseEntityBuilder()
                 .entity(publisherResourceAssembler.toResource(publisher))
