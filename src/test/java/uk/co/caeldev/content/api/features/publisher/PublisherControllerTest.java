@@ -203,7 +203,7 @@ public class PublisherControllerTest {
         assertThat(body.getUsername()).isEqualTo(expectedPublisher.getUsername());
     }
 
-    @Test
+    @Test(expected = PublisherNotFoundException.class)
     public void shouldNotGetPublisherAssociatedToTokenWhenPublisherDoesNotExists() throws Exception {
         //Given
         String username = string().next();
@@ -214,9 +214,6 @@ public class PublisherControllerTest {
                 .willReturn(null);
 
         //When
-        final ResponseEntity<PublisherResource> response = publisherController.currentPublisherFromToken(principal);
-
-        //Then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        publisherController.currentPublisherFromToken(principal);
     }
 }

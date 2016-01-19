@@ -16,6 +16,7 @@ Feature: Content
       | 200         | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | d72b4c53-8993-4a5f-acc2-629456e81c6d |
       | 403         | usertest            | usertest | 13163bf2-0c9b-4764-b8f6-f752a77cb131 | 13163bf2-0c9b-4764-b8f6-f752a77cb131 | d72b4c53-8993-4a5f-acc2-629456e81c6d |
       | 403         | usertest1           | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | d72b4c53-8993-4a5f-acc2-629456e81c6d |
+      | 404         | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | a7da464d-373f-4417-8233-86bbdeb946bc |
 
   Scenario Outline: As a consumer, I should be able to get all content by publisher UUID and status paginated.
     Given a publisher with id <publisher_id>, username <username> and publisher uuid <publisher_uuid>
@@ -37,7 +38,12 @@ Feature: Content
       | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | UNREAD | 1         | 3               |
 
   Scenario Outline: As a consumer, I should be to get all content by publisher UUID and status paginated that belongs to the publisher logged in.
-    Given a publisher with id <publisher_id>, username <username> and publisher uuid <publisher_uuid>
+    Given the following persisted publishers
+      | publisher_id                          | username  | publisher_uuid                       |
+      | f5c40191-22ec-4d34-9d8d-2cb9732635fc  | usertest  | 6cf1baaf-56fe-4e3b-844d-c73782d58917 |
+      | 0daf1017-c59d-4ee7-8435-192f5b359ead  | usertest1 | 6ee1193c-b54e-4d22-b500-944fb8287d00 |
+
+    And a publisher with id <publisher_id>, username <username> and publisher uuid <publisher_uuid>
     And credential details have been provided using username <credential_username>
     And the following persisted content associated to a publisher
       | contentUUID                          | publisherId                          | content           | status |
@@ -51,8 +57,8 @@ Feature: Content
     Then the response should be empty and status code 403
 
     Examples:
-      | credential_username | username | publisher_uuid                       | publisher_id                         | status | page_size | publisher_uuid_requested             |
-      | usertest            | usertest | 6cf1baaf-56fe-4e3b-844d-c73782d58917 | f5c40191-22ec-4d34-9d8d-2cb9732635fc | UNREAD | 4         | 6ee1193c-b54e-4d22-b500-944fb8287d00 |
+      | credential_username | status | page_size | publisher_uuid_requested             |
+      | usertest            | UNREAD | 4         | 6ee1193c-b54e-4d22-b500-944fb8287d00 |
 
   Scenario Outline: As a consumer, I should be able to get content by UUID that belong to a particular publisher given CORS support.
     Given a publisher with id <publisher_id>, username <username> and publisher uuid <publisher_uuid>

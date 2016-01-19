@@ -1,7 +1,9 @@
 package uk.co.caeldev.content.api.features.content;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -16,10 +18,17 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
+import static uk.co.caeldev.content.api.features.content.ContentBuilder.contentBuilder;
+import static uk.co.caeldev.content.api.features.content.ContentStatus.READ;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContentServiceImplTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private ContentRepository contentRepository;
@@ -59,7 +68,7 @@ public class ContentServiceImplTest {
         final String uuid = UUID.randomUUID().toString();
 
         //And
-        final Content expectedContent = ContentBuilder.contentBuilder().contentUUID(uuid).build();
+        final Content expectedContent = contentBuilder().contentUUID(uuid).build();
         given(contentRepository.findOneByUUID(uuid)).willReturn(expectedContent);
 
         //When
@@ -75,7 +84,6 @@ public class ContentServiceImplTest {
         final String uuid = UUID.randomUUID().toString();
 
         //And
-        final Content expectedContent = ContentBuilder.contentBuilder().contentUUID(uuid).build();
         given(contentRepository.findOneByUUID(uuid)).willReturn(null);
 
         //When
@@ -94,7 +102,7 @@ public class ContentServiceImplTest {
 
 
         //And
-        final Content expectedContent = ContentBuilder.contentBuilder().publisherId(publisherId).build();
+        final Content expectedContent = contentBuilder().publisherId(publisherId).build();
         final Page<Content> page = PageBuilder.<Content>pageBuilder().page(expectedContent).build();
 
         given(contentRepository.findAllContentByStatusPublisherIdPaginated(contentStatus, publisherId, pageable)).willReturn(page);
@@ -106,5 +114,53 @@ public class ContentServiceImplTest {
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
 
+    }
+
+    @Test
+    public void shouldUpdateContentStatus() throws Exception {
+        //Given
+        final UUID contentUUID = UUID.randomUUID();
+        final ContentStatus contentStatusNew = ContentStatus.READ;
+
+        //And
+        final ContentStatus contentStatus = ContentStatus.UNREAD;
+        final Content expectedContent = contentBuilder()
+                .contentUUID(contentUUID.toString())
+                .status(contentStatus)
+                .build();
+        given(contentRepository.findOneByUUID(contentUUID.toString())).willReturn(expectedContent);
+
+        //And
+        final Content expectedSavedContent = contentBuilder()
+                .content(expectedContent.getContent())
+                .contentUUID(expectedContent.getContentUUID())
+                .creationDate(expectedContent.getCreationDate())
+                .publisherId(expectedContent.getPublisherId())
+                .status(contentStatusNew)
+                .build();
+        given(contentRepository.updateStatus(contentUUID.toString(), contentStatusNew)).willReturn(expectedSavedContent);
+
+        //When
+        Content result = contentService.updateStatus(contentUUID, contentStatusNew);
+
+        //Then
+        assertThat(result.getContentUUID()).isEqualTo(contentUUID.toString());
+        assertThat(result.getStatus()).isEqualTo(contentStatusNew);
+    }
+
+    @Test
+    public void shouldNotUpdateContentStatusWhenContentDoesNotExists() throws Exception {
+        //Given
+        final UUID contentUUID = UUID.randomUUID();
+        final ContentStatus contentStatusNew = ContentStatus.READ;
+
+        //And
+        given(contentRepository.findOneByUUID(contentUUID.toString())).willReturn(null);
+
+        //Expect
+        thrown.expect(ContentNotFoundException.class);
+
+        //When
+        contentService.updateStatus(contentUUID, contentStatusNew);
     }
 }

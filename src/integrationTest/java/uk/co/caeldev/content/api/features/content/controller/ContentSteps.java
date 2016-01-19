@@ -30,6 +30,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.IF_MATCH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -49,6 +50,7 @@ public class ContentSteps extends BaseControllerConfiguration {
     private int statusCode;
     private List<PagedResources<ContentResource>> paginatedResults = Lists.newArrayList();
     private String accessControlAllowOrigin;
+    private String eTagValue;
 
     @Autowired
     public ContentSteps(final PublisherRepository publisherRepository,
@@ -140,6 +142,8 @@ public class ContentSteps extends BaseControllerConfiguration {
         if (statusCode == OK.value()) {
             responseBody = response.then()
                     .extract().body().as(ContentResource.class);
+            response.then().log().all();
+            eTagValue = response.then().extract().header(HttpHeaders.ETAG);
         }
     }
 
@@ -245,5 +249,28 @@ public class ContentSteps extends BaseControllerConfiguration {
         verify(getRequestedFor(urlMatching("/sso/user")));
         assertThat(this.statusCode).isEqualTo(expectedStatusCode);
         assertThat(this.accessControlAllowOrigin).isEqualTo("http://localhost:" + port);
+    }
+
+    @And("^update status by UUID (.+) and publisher UUID (.+) to (.+)$")
+    public void updateStatusByUUIDContent_uuidAndPublisherUUIDPublisher_uuidToNew_content_status(String contentUUID, String publisherUUID, ContentStatus newContentStatus) throws Throwable {
+        final ContentResource requestBody = contentResourceBuilder().noRandomData().status(newContentStatus).build();
+
+        Response response = given().port(port).basePath(basePath).log().all()
+                .when()
+                .header(AUTHORIZATION, format("Bearer %s", authenticationSteps.getAccessToken()))
+                .header(HttpHeaders.ORIGIN, "http://localhost:" + port)
+                .contentType(APPLICATION_JSON_VALUE)
+                .header(IF_MATCH, eTagValue)
+                .body(requestBody)
+                .put(format("/publishers/%s/contents/%s", publisherUUID, contentUUID));
+
+        statusCode = response.then()
+                .extract().statusCode();
+    }
+
+    @Then("^the content put response is (.+)$")
+    public void theContentPutResponseIsStatus_code(int expectedStatusCode) throws Throwable {
+        verify(getRequestedFor(urlMatching("/sso/user")));
+        assertThat(this.statusCode).isEqualTo(expectedStatusCode);
     }
 }

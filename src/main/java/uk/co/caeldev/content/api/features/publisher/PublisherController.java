@@ -14,6 +14,7 @@ import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
 import java.security.Principal;
 
 import static org.springframework.http.HttpStatus.*;
+import static uk.co.caeldev.content.api.features.checks.Preconditions.checkNullPublisher;
 
 @RestController
 @EnableOAuth2Resource
@@ -128,13 +129,7 @@ public class PublisherController {
         final String username = principal.getName();
 
         final Publisher publisher = publisherService.getPublisherByUsername(username);
-
-        if (publisher == null) {
-            return ResponseEntityBuilder
-                    .<PublisherResource>responseEntityBuilder()
-                    .statusCode(NO_CONTENT)
-                    .build();
-        }
+        checkNullPublisher(publisher);
 
         return ResponseEntityBuilder
                 .<PublisherResource>responseEntityBuilder()

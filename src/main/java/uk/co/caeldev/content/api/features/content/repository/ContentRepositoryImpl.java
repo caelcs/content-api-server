@@ -5,8 +5,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import uk.co.caeldev.content.api.features.content.Content;
+import uk.co.caeldev.content.api.features.content.ContentStatus;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Update.update;
 
 @Component
 public class ContentRepositoryImpl implements ContentRepositoryBase {
@@ -22,5 +24,11 @@ public class ContentRepositoryImpl implements ContentRepositoryBase {
     public Content findOneByUUID(String uuid) {
         final Query query = new Query(where("contentUUID").is(uuid));
         return mongoTemplate.findOne(query, Content.class);
+    }
+
+    @Override
+    public Content updateStatus(String contentUUID, ContentStatus contentStatusNew) {
+        final Query query = new Query(where("contentUUID").is(contentUUID));
+        return mongoTemplate.findAndModify(query, update("status", contentStatusNew), Content.class);
     }
 }

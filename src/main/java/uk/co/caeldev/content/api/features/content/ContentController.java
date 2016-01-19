@@ -16,11 +16,10 @@ import uk.co.caeldev.content.api.features.publisher.Publisher;
 import uk.co.caeldev.content.api.features.publisher.PublisherService;
 import uk.co.caeldev.spring.mvc.ResponseEntityBuilder;
 
-import java.util.Objects;
 import java.util.UUID;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.springframework.http.HttpStatus.*;
+import static uk.co.caeldev.content.api.features.checks.Preconditions.*;
 
 @RestController
 @EnableOAuth2Resource
@@ -65,6 +64,7 @@ public class ContentController {
         }
 
         final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID.toString());
+        checkNullPublisher(publisher);
 
         final Content publishedContent = contentService.publish(content, publisher.getId());
 
@@ -86,16 +86,9 @@ public class ContentController {
         final Content content = contentService.findOneByUUID(contentUUID.toString());
         final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID.toString());
 
-        checkNotNull(content, "No content with given UUID");
-        checkNotNull(publisher, "No publisher with given UUID");
-
-        if (!Objects.equals(content.getPublisherId(), publisher.getId())) {
-            LOGGER.warn("Content forbidden");
-            return ResponseEntityBuilder.
-                    <ContentResource>responseEntityBuilder()
-                    .statusCode(FORBIDDEN)
-                    .build();
-        }
+        checkNullContent(content);
+        checkNullPublisher(publisher);
+        checkForbiddenContent(content.getPublisherId(), publisher.getId());
 
         return ResponseEntityBuilder.
                 <ContentResource>responseEntityBuilder()
@@ -116,6 +109,7 @@ public class ContentController {
         LOGGER.info("get all content paginated by Content Status and Publisher UUID");
 
         final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID.toString());
+        checkNullPublisher(publisher);
 
         final Page<Content> pageContent = contentService.findAllContentPaginatedBy(contentStatus, publisher.getId(), pageable);
 
@@ -123,6 +117,31 @@ public class ContentController {
                 <PagedResources<ContentResource>>responseEntityBuilder()
                 .statusCode(OK)
                 .entity(pagedResourcesAssembler.toResource(pageContent, contentResourceAssembler))
+                .build();
+    }
+
+    @RequestMapping(value = "/publishers/{publisherUUID}/contents/{contentUUID}",
+            method = RequestMethod.PUT,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
+    public ResponseEntity<ContentResource> updateStatus(@PathVariable UUID publisherUUID,
+                                                        @PathVariable UUID contentUUID,
+                                                        @RequestBody ContentResource contentResourceNew) {
+        LOGGER.info("update content stauts by content UUID");
+
+        final Publisher publisher = publisherService.getPublisherByUUID(publisherUUID.toString());
+        final Content currentContent = contentService.findOneByUUID(contentUUID.toString());
+
+        checkNullContent(currentContent);
+        checkNullPublisher(publisher);
+        checkForbiddenContent(currentContent.getPublisherId(), publisher.getId());
+
+        final Content contentUpdated = contentService.updateStatus(contentUUID, contentResourceNew.getContentStatus());
+
+        return ResponseEntityBuilder.
+                <ContentResource>responseEntityBuilder()
+                .statusCode(OK)
+                .entity(contentResourceAssembler.toResource(contentUpdated))
                 .build();
     }
 }

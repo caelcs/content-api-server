@@ -27,8 +27,8 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ContentResourceInterceptor(contentService, contentResourceAssembler())).addPathPatterns("/publisher/**/contents", "/publisher/**/contents/**");
-        registry.addInterceptor(new PublisherResourceInterceptor(publisherService, publisherResourceAssembler())).addPathPatterns("/publishers", "/publishers/**");
+        registry.addInterceptor(new ContentResourceInterceptor(contentService, contentResourceAssembler())).addPathPatterns("/publishers/**/contents", "/publishers/**/contents/**");
+        registry.addInterceptor(new PublisherResourceInterceptor(publisherService, publisherResourceAssembler())).addPathPatterns("/publishers", "/publishers/**").excludePathPatterns("/publishers/**/contents/**", "/publishers/**/contents");
         registry.addInterceptor(new CORSInterceptor());
         super.addInterceptors(registry);
     }

@@ -10,6 +10,7 @@ import uk.co.caeldev.content.api.features.content.repository.ContentRepository;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static uk.co.caeldev.content.api.features.checks.Preconditions.checkNullContent;
 import static uk.co.caeldev.content.api.features.content.ContentBuilder.contentBuilder;
 
 @Component
@@ -45,5 +46,12 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Page<Content> findAllContentPaginatedBy(ContentStatus contentStatus, String publisherId, Pageable pageable) {
         return contentRepository.findAllContentByStatusPublisherIdPaginated(contentStatus, publisherId, pageable);
+    }
+
+    @Override
+    public Content updateStatus(UUID contentUUID, ContentStatus contentStatus) {
+        final Content currentContent = contentRepository.findOneByUUID(contentUUID.toString());
+        checkNullContent(currentContent);
+        return contentRepository.updateStatus(currentContent.getContentUUID(), contentStatus);
     }
 }

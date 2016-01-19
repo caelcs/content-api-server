@@ -30,10 +30,12 @@ public class ResourceOwnerEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-        LOGGER.debug("Eval if hasPermission");
+        LOGGER.info("Eval if hasPermission");
 
         if (PUBLISHER_OWN_CONTENT.name().equals(permission.toString()) && targetDomainObject instanceof UUID) {
+            LOGGER.debug("Verify Publisher exists");
             final UUID publisherUUID = (UUID) targetDomainObject;
+            LOGGER.debug("Publisher UUID: " + publisherUUID.toString() + " - ID: " + authentication.getName());
             final Publisher publisher = publisherService.getPublisherByUUIDAndUsername(publisherUUID.toString(), authentication.getName());
             return publisher != null;
         }

@@ -47,4 +47,12 @@ public class ContentResourceBuilder {
     public ContentResource build() {
         return new ContentResource(contentUUID, content, contentStatus, creationDate);
     }
+
+    public ContentResourceBuilder noRandomData() {
+        this.content = null;
+        this.contentStatus = null;
+        this.contentUUID = null;
+        this.creationDate = null;
+        return this;
+    }
 }

@@ -236,4 +236,9 @@ public class PublisherSteps extends BaseControllerConfiguration {
                     .extract().body().as(PublisherResource.class);
         }
     }
+
+    @Given("^the following persisted publishers$")
+    public void theFollowingPersistedPublishers(List<Publisher> publishers) throws Throwable {
+        publisherRepository.save(publishers);
+    }
 }
