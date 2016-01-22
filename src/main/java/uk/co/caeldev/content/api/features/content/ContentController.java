@@ -121,7 +121,8 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/publishers/{publisherUUID}/contents/{contentUUID}",
-            method = RequestMethod.PUT,
+            method = RequestMethod.POST,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasPermission(#publisherUUID, 'PUBLISHER_OWN_CONTENT')")
     public ResponseEntity<ContentResource> updateStatus(@PathVariable UUID publisherUUID,
