@@ -262,7 +262,7 @@ public class ContentSteps extends BaseControllerConfiguration {
                 .contentType(APPLICATION_JSON_VALUE)
                 .header(IF_MATCH, eTagValue)
                 .body(requestBody)
-                .put(format("/publishers/%s/contents/%s", publisherUUID, contentUUID));
+                .post(format("/publishers/%s/contents/%s", publisherUUID, contentUUID));
 
         statusCode = response.then()
                 .extract().statusCode();
