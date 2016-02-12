@@ -8,7 +8,7 @@ mongo:
 spring:
   oauth2:
     resource:
-      userInfoUri: http://localhost:9080/sso/user
+      userInfoUri: http://127.0.0.1:9080/sso/user
 
 info:
   app:
