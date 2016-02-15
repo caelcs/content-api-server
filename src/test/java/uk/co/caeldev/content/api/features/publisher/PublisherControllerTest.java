@@ -41,9 +41,15 @@ public class PublisherControllerTest {
     public void shouldCreatePublisher() throws Exception {
         //Given
         final String username = string().next();
-        final Publisher publisher = publisherBuilder().username(username).build();
+        final String firstName = string().next();
+        final String lastName = string().next();
+        final Publisher publisher = publisherBuilder()
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
 
-        given(publisherService.create(username)).willReturn(publisher);
+        given(publisherService.create(username, firstName, lastName)).willReturn(publisher);
 
         //And
         given(publisherResourceAssembler.toResource(publisher))
@@ -52,7 +58,12 @@ public class PublisherControllerTest {
                         .build());
 
         //When
-        final PublisherResource publisherResource = publisherResourceBuilder().username(username).build();
+        final PublisherResource publisherResource = publisherResourceBuilder()
+                .username(username)
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+
         final ResponseEntity<PublisherResource> response = publisherController.create(publisherResource);
 
         //Then

@@ -18,6 +18,8 @@ public class PublisherBuilder {
     private String username = string(30, CharacterSetFilter.LettersOnly).next();
     private Status status = value(Status.class).next();
     private LocalDateTime creationDate = now();
+    private String firstName = string().next();
+    private String lastName = string().next();
 
     private PublisherBuilder() {
     }
@@ -53,6 +55,18 @@ public class PublisherBuilder {
         publisher.setUsername(username);
         publisher.setCreationTime(creationDate);
         publisher.setStatus(status);
+        publisher.setFirstName(firstName);
+        publisher.setLastName(lastName);
         return publisher;
+    }
+
+    public PublisherBuilder firstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public PublisherBuilder lastName(String lastName) {
+        this.lastName = lastName;
+        return this;
     }
 }

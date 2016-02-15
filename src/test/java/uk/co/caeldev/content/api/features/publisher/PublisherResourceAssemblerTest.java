@@ -28,6 +28,8 @@ public class PublisherResourceAssemblerTest {
         assertThat(resource.getPublisherUUID()).isEqualTo(publisher.getPublisherUUID());
         assertThat(resource.getStatus()).isEqualTo(publisher.getStatus());
         assertThat(resource.getUsername()).isEqualTo(publisher.getUsername());
+        assertThat(resource.getFirstName()).isEqualTo(publisher.getFirstName());
+        assertThat(resource.getLastName()).isEqualTo(publisher.getLastName());
         assertThat(resource.getCreationTime()).isEqualTo(publisher.getCreationTime());
     }
 
@@ -44,6 +46,8 @@ public class PublisherResourceAssemblerTest {
         assertThat(result.getPublisherUUID()).isEqualTo(publisher.getPublisherUUID());
         assertThat(result.getStatus()).isEqualTo(publisherResource.getStatus());
         assertThat(result.getUsername()).isEqualTo(publisher.getUsername());
+        assertThat(result.getFirstName()).isEqualTo(publisher.getFirstName());
+        assertThat(result.getLastName()).isEqualTo(publisher.getLastName());
         assertThat(result.getCreationTime()).isEqualTo(publisher.getCreationTime());
     }
 

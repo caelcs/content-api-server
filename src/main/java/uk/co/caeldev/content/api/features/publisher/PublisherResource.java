@@ -14,16 +14,22 @@ public class PublisherResource extends ResourceSupport {
     private String username;
     private LocalDateTime creationTime;
     private Status status;
+    private String firstName;
+    private String lastName;
 
     @JsonCreator
     public PublisherResource(@JsonProperty("publisherUUID") final String publisherUUID,
                              @JsonProperty("username") final String username,
                              @JsonProperty("creationTime") final LocalDateTime creationTime,
-                             @JsonProperty("status") final Status status) {
+                             @JsonProperty("status") final Status status,
+                             @JsonProperty("firstName") final String firstName,
+                             @JsonProperty("lastName") final String lastName) {
         this.publisherUUID = publisherUUID;
         this.username = username;
         this.creationTime = creationTime;
         this.status = status;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getPublisherUUID() {
@@ -40,6 +46,14 @@ public class PublisherResource extends ResourceSupport {
 
     public Status getStatus() {
         return status;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     @Override

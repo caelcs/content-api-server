@@ -105,12 +105,14 @@ public class PublisherServiceImplTest {
     public void shouldCreatePublisher() throws Exception {
         //Given
         final String username = string().next();
+        final String firstName = string().next();
+        final String lastName = string().next();
 
         //And
         final ArgumentCaptor<Publisher> argumentCaptor = ArgumentCaptor.forClass(Publisher.class);
 
         //When
-        publisherService.create(username);
+        publisherService.create(username, firstName, lastName);
 
         //Then
         verify(publisherRepository).save(argumentCaptor.capture());
@@ -118,6 +120,8 @@ public class PublisherServiceImplTest {
         final Publisher argumentCaptorValue = argumentCaptor.getValue();
         assertThat(argumentCaptorValue.getPublisherUUID()).isNotEmpty();
         assertThat(argumentCaptorValue.getUsername()).isEqualTo(username);
+        assertThat(argumentCaptorValue.getFirstName()).isEqualTo(firstName);
+        assertThat(argumentCaptorValue.getLastName()).isEqualTo(lastName);
         assertThat(argumentCaptorValue.getCreationTime()).isNotNull();
         assertThat(argumentCaptorValue.getStatus()).isEqualTo(Status.ACTIVE);
     }

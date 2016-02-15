@@ -61,6 +61,8 @@ public class PublisherRepositorySteps extends BaseRepositoryConfiguration {
         assertThat(result.getId()).isEqualTo(publisher.getId());
         assertThat(result.getPublisherUUID()).isEqualTo(publisher.getPublisherUUID());
         assertThat(result.getUsername()).isEqualTo(publisher.getUsername());
+        assertThat(result.getFirstName()).isEqualTo(publisher.getFirstName());
+        assertThat(result.getLastName()).isEqualTo(publisher.getLastName());
         assertThat(result.getStatus()).isEqualTo(publisher.getStatus());
     }
 

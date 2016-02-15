@@ -17,6 +17,8 @@ public class PublisherResourceBuilder {
     private String username = string().next();
     private LocalDateTime creationTime = now();
     private Status status = value(Status.class).next();
+    private String firstName = string().next();
+    private String lastName = string().next();
 
     private PublisherResourceBuilder() {
     }
@@ -35,6 +37,8 @@ public class PublisherResourceBuilder {
         username = publisher.getUsername();
         creationTime = publisher.getCreationTime();
         status = publisher.getStatus();
+        firstName = publisher.getFirstName();
+        lastName = publisher.getLastName();
         return this;
     }
 
@@ -49,6 +53,16 @@ public class PublisherResourceBuilder {
     }
 
     public PublisherResource build() {
-        return new PublisherResource(publisherUUID, username, creationTime, status);
+        return new PublisherResource(publisherUUID, username, creationTime, status, firstName, lastName);
+    }
+
+    public PublisherResourceBuilder firstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public PublisherResourceBuilder lastName(String lastName) {
+        this.lastName = lastName;
+        return this;
     }
 }

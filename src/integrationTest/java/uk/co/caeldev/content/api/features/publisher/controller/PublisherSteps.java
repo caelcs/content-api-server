@@ -108,6 +108,8 @@ public class PublisherSteps extends BaseControllerConfiguration {
             assertThat(responseBody.getStatus()).isEqualTo(Status.ACTIVE);
             assertThat(responseBody.getPublisherUUID()).isNotNull();
             assertThat(responseBody.getUsername()).isEqualTo(publisherResourceToBePersist.getUsername());
+            assertThat(responseBody.getFirstName()).isEqualTo(publisherResourceToBePersist.getFirstName());
+            assertThat(responseBody.getLastName()).isEqualTo(publisherResourceToBePersist.getLastName());
             assertThat(responseBody.getCreationTime()).isNotNull();
         }
     }
@@ -161,6 +163,8 @@ public class PublisherSteps extends BaseControllerConfiguration {
             assertThat(responseBody.getStatus()).isEqualTo(status);
             assertThat(responseBody.getPublisherUUID()).isEqualTo(publisherResourceToBePersist.getPublisherUUID());
             assertThat(responseBody.getUsername()).isEqualTo(publisherResourceToBePersist.getUsername());
+            assertThat(responseBody.getFirstName()).isEqualTo(publisherResourceToBePersist.getFirstName());
+            assertThat(responseBody.getLastName()).isEqualTo(publisherResourceToBePersist.getLastName());
             assertThat(responseBody.getCreationTime()).isNotNull();
         }
     }
