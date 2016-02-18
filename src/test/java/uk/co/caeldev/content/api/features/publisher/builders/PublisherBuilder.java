@@ -10,9 +10,11 @@ import java.util.UUID;
 import static org.joda.time.LocalDateTime.now;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.value;
+import static uk.org.fyodor.generators.RDG.emailAddress;
 
 public class PublisherBuilder {
 
+    private String email = emailAddress().next();
     private String id = UUID.randomUUID().toString();
     private String publisherUUID = UUID.randomUUID().toString();
     private String username = string(30, CharacterSetFilter.LettersOnly).next();
@@ -57,6 +59,7 @@ public class PublisherBuilder {
         publisher.setStatus(status);
         publisher.setFirstName(firstName);
         publisher.setLastName(lastName);
+        publisher.setEmail(email);
         return publisher;
     }
 
@@ -67,6 +70,11 @@ public class PublisherBuilder {
 
     public PublisherBuilder lastName(String lastName) {
         this.lastName = lastName;
+        return this;
+    }
+
+    public PublisherBuilder email(String email) {
+        this.email = email;
         return this;
     }
 }

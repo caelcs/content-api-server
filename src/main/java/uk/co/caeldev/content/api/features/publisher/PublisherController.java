@@ -43,6 +43,7 @@ public class PublisherController {
         String username = publisherResource.getUsername();
         String firstName = publisherResource.getFirstName();
         String lastName = publisherResource.getLastName();
+        String email = publisherResource.getEmail();
 
         if (username == null || username.isEmpty()) {
             LOGGER.warn("Publisher username is not Invalid");
@@ -60,7 +61,7 @@ public class PublisherController {
                     .build();
         }
 
-        final Publisher publisher = publisherService.create(username, firstName, lastName);
+        final Publisher publisher = publisherService.create(username, firstName, lastName, email);
 
         return ResponseEntityBuilder
                 .<PublisherResource>responseEntityBuilder()

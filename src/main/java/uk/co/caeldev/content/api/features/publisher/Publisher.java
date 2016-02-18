@@ -17,6 +17,7 @@ public class Publisher {
     private Status status;
     private String firstName;
     private String lastName;
+    private String email;
 
     public String getFirstName() {
         return firstName;
@@ -74,6 +75,14 @@ public class Publisher {
 
     public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

@@ -20,6 +20,7 @@ import static org.springframework.http.HttpStatus.*;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherResourceBuilder.publisherResourceBuilder;
+import static uk.org.fyodor.generators.RDG.emailAddress;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublisherControllerTest {
@@ -43,13 +44,15 @@ public class PublisherControllerTest {
         final String username = string().next();
         final String firstName = string().next();
         final String lastName = string().next();
+        final String email = emailAddress().next();
         final Publisher publisher = publisherBuilder()
                 .username(username)
                 .firstName(firstName)
                 .lastName(lastName)
+                .email(email)
                 .build();
 
-        given(publisherService.create(username, firstName, lastName)).willReturn(publisher);
+        given(publisherService.create(username, firstName, lastName, email)).willReturn(publisher);
 
         //And
         given(publisherResourceAssembler.toResource(publisher))
@@ -62,6 +65,7 @@ public class PublisherControllerTest {
                 .username(username)
                 .firstName(firstName)
                 .lastName(lastName)
+                .email(email)
                 .build();
 
         final ResponseEntity<PublisherResource> response = publisherController.create(publisherResource);
@@ -71,6 +75,7 @@ public class PublisherControllerTest {
         assertThat(response.getBody().getCreationTime()).isEqualTo(publisher.getCreationTime());
         assertThat(response.getBody().getStatus()).isEqualTo(publisher.getStatus());
         assertThat(response.getBody().getUsername()).isEqualTo(publisher.getUsername());
+        assertThat(response.getBody().getEmail()).isEqualTo(publisher.getEmail());
         assertThat(response.getStatusCode()).isEqualTo(CREATED);
     }
 
@@ -184,6 +189,7 @@ public class PublisherControllerTest {
         assertThat(body.getStatus()).isEqualTo(expectedPublisher.getStatus());
         assertThat(body.getCreationTime()).isEqualTo(expectedPublisher.getCreationTime());
         assertThat(body.getUsername()).isEqualTo(expectedPublisher.getUsername());
+        assertThat(body.getEmail()).isEqualTo(expectedPublisher.getEmail());
     }
 
     @Test
@@ -212,6 +218,7 @@ public class PublisherControllerTest {
         assertThat(body.getStatus()).isEqualTo(expectedPublisher.getStatus());
         assertThat(body.getCreationTime()).isEqualTo(expectedPublisher.getCreationTime());
         assertThat(body.getUsername()).isEqualTo(expectedPublisher.getUsername());
+        assertThat(body.getEmail()).isEqualTo(expectedPublisher.getEmail());
     }
 
     @Test(expected = PublisherNotFoundException.class)

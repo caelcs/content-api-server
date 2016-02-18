@@ -10,9 +10,11 @@ import java.util.UUID;
 import static org.joda.time.LocalDateTime.now;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.value;
+import static uk.org.fyodor.generators.RDG.emailAddress;
 
 public class PublisherResourceBuilder {
 
+    private String email = emailAddress().next();
     private String publisherUUID = UUID.randomUUID().toString();
     private String username = string().next();
     private LocalDateTime creationTime = now();
@@ -39,6 +41,7 @@ public class PublisherResourceBuilder {
         status = publisher.getStatus();
         firstName = publisher.getFirstName();
         lastName = publisher.getLastName();
+        email = publisher.getEmail();
         return this;
     }
 
@@ -53,7 +56,7 @@ public class PublisherResourceBuilder {
     }
 
     public PublisherResource build() {
-        return new PublisherResource(publisherUUID, username, creationTime, status, firstName, lastName);
+        return new PublisherResource(publisherUUID, username, creationTime, status, firstName, lastName, email);
     }
 
     public PublisherResourceBuilder firstName(String firstName) {
@@ -63,6 +66,11 @@ public class PublisherResourceBuilder {
 
     public PublisherResourceBuilder lastName(String lastName) {
         this.lastName = lastName;
+        return this;
+    }
+
+    public PublisherResourceBuilder email(String email) {
+        this.email = email;
         return this;
     }
 }

@@ -31,11 +31,12 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public Publisher create(String username, String firstName, String lastName) {
+    public Publisher create(String username, String firstName, String lastName, String email) {
         final Publisher publisher = new Publisher();
         publisher.setUsername(username);
         publisher.setFirstName(firstName);
         publisher.setLastName(lastName);
+        publisher.setEmail(email);
         publisher.setCreationTime(now());
         publisher.setStatus(ACTIVE);
         publisher.setPublisherUUID(randomUUID().toString());

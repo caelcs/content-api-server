@@ -19,6 +19,6 @@ public class PublisherResourceAssembler extends DomainResourceAssemblerSupport<P
 
     @Override
     public PublisherResource toResource(final Publisher entity) {
-        return new PublisherResource(entity.getPublisherUUID(), entity.getUsername(), entity.getCreationTime(), entity.getStatus(), entity.getFirstName(), entity.getLastName());
+        return new PublisherResource(entity.getPublisherUUID(), entity.getUsername(), entity.getCreationTime(), entity.getStatus(), entity.getFirstName(), entity.getLastName(), entity.getEmail());
     }
 }

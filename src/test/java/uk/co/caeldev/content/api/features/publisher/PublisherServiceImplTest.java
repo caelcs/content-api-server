@@ -15,6 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static uk.co.caeldev.content.api.commons.ContentApiRDG.string;
 import static uk.co.caeldev.content.api.features.publisher.builders.PublisherBuilder.publisherBuilder;
+import static uk.org.fyodor.generators.RDG.emailAddress;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublisherServiceImplTest {
@@ -107,12 +108,13 @@ public class PublisherServiceImplTest {
         final String username = string().next();
         final String firstName = string().next();
         final String lastName = string().next();
+        final String email = emailAddress().next();
 
         //And
         final ArgumentCaptor<Publisher> argumentCaptor = ArgumentCaptor.forClass(Publisher.class);
 
         //When
-        publisherService.create(username, firstName, lastName);
+        publisherService.create(username, firstName, lastName, email);
 
         //Then
         verify(publisherRepository).save(argumentCaptor.capture());
@@ -124,6 +126,7 @@ public class PublisherServiceImplTest {
         assertThat(argumentCaptorValue.getLastName()).isEqualTo(lastName);
         assertThat(argumentCaptorValue.getCreationTime()).isNotNull();
         assertThat(argumentCaptorValue.getStatus()).isEqualTo(Status.ACTIVE);
+        assertThat(argumentCaptorValue.getEmail()).isEqualTo(email);
     }
 
     @Test
